@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎨 인플레이션 수업용 프리미엄 핸드드론 SVG 카탈로그</title>
+  <style>
+    @font-face {
+      font-family: "sd-misaeng";
+      src: url("/fonts/sdmisaeng.woff2") format("woff2");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --color-paper: #fffdf7;
+      --color-ink: #1f1f1d;
+      --color-ink-soft: #5f615d;
+      --color-yellow-soft: #fff3b0;
+      --color-blue-soft: #dff4ff;
+      --color-pink-soft: #ffd6df;
+      --color-green-soft: #d9f6d3;
+    }
+
+    body {
+      margin: 0;
+      padding: 3rem 1.5rem;
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+      font-family: "sd-misaeng", "Comic Sans MS", system-ui, sans-serif;
+      font-size: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+      border-bottom: 3px double var(--color-ink);
+      padding-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 3.8rem;
+      margin: 0 0 0.5rem;
+      font-weight: 900;
+    }
+
+    .subtitle {
+      font-size: 2rem;
+      color: var(--color-ink-soft);
+      margin: 0;
+    }
+
+    /* 네비게이션 가이드 */
+    .top-info {
+      background: #fffefa;
+      border: 3px solid var(--color-ink);
+      border-radius: 18px 14px 20px 13px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 3rem;
+      box-shadow: 6px 6px 0 var(--color-ink);
+    }
+
+    .top-info h2 {
+      font-size: 2.2rem;
+      margin-top: 0;
+      border-bottom: 2px dashed rgba(31,31,29,0.15);
+      padding-bottom: 0.5rem;
+    }
+
+    /* 11개 씬 그리드 레이아웃 */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 2.5rem;
+    }
+
+    .catalog-card {
+      background: #fffefa;
+      border: 3px solid var(--color-ink);
+      border-radius: 18px 14px 20px 13px;
+      box-shadow: 5px 6px 0 var(--color-ink);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .catalog-card:hover {
+      transform: translate(-2px, -3px);
+      box-shadow: 7px 9px 0 var(--color-ink);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      border-bottom: 2px dashed rgba(31,31,29,0.1);
+      padding-bottom: 0.5rem;
+    }
+
+    .card-title {
+      font-size: 2rem;
+      font-weight: 900;
+      margin: 0;
+    }
+
+    .card-meta {
+      font-size: 1.2rem;
+      background: var(--color-blue-soft);
+      border: 2px solid var(--color-ink);
+      border-radius: 999px;
+      padding: 0.2rem 0.6rem;
+      font-weight: bold;
+    }
+
+    .visual-stage {
+      height: 250px;
+      background: #fff;
+      border: 2px dashed rgba(31,31,29,0.15);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .card-desc {
+      font-size: 1.35rem;
+      color: var(--color-ink-soft);
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .btn-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .hand-button {
+      background: var(--color-yellow-soft);
+      border: 2px solid var(--color-ink);
+      border-radius: 10px 12px 9px 11px;
+      padding: 0.5rem 1rem;
+      color: var(--color-ink);
+      font-weight: bold;
+      font-family: inherit;
+      font-size: 1.3rem;
+      cursor: pointer;
+      box-shadow: 2px 3px 0 var(--color-ink);
+      transition: all 0.15s ease;
+      text-align: center;
+    }
+
+    .hand-button:hover {
+      transform: translate(-1px, -2px);
+      box-shadow: 3px 5px 0 var(--color-ink);
+    }
+
+    .hand-button:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0 var(--color-ink);
+    }
+
+    /* -------------------------------------------------------------
+       Wobbly Turbulence & Jitter CSS
+    ------------------------------------------------------------- */
+    .wobbly-line-active {
+      animation: svg-wiggle-effect 0.35s steps(2) infinite;
+    }
+
+    @keyframes svg-wiggle-effect {
+      0% { filter: url(#rough-edge-1); }
+      50% { filter: url(#rough-edge-2); }
+    }
+
+    /* SVG 스타일들 */
+    .sketch-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .sketch-line {
+      fill: none;
+      stroke: var(--color-ink);
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sketch-line.thin {
+      stroke-width: 3;
+    }
+
+    .sketch-line-fill {
+      stroke: var(--color-ink);
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .svg-label {
+      fill: var(--color-ink);
+      font-family: "sd-misaeng", "Comic Sans MS", system-ui, sans-serif;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .svg-label.small {
+      font-size: 11px;
+    }
+
+    .demand {
+      stroke: #218a4b;
+      stroke-width: 5;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .supply {
+      stroke: #d13d4c;
+      stroke-width: 5;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .shifted {
+      opacity: 0.55;
+    }
+
+    .color-offset {
+      transform: translate(2px, -3px);
+    }
+
+    /* 알람 팝업 */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--color-ink);
+      color: #fff;
+      padding: 0.8rem 2rem;
+      border-radius: 999px;
+      font-size: 1.4rem;
+      z-index: 100;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 니키 케이스 스타일의 생동감 넘치는 wiggling 효과용 흔들림 필터 마크업 -->
+  <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
+    <defs>
+      <!-- 홀수 프레임 노이즈 -->
+      <filter id="rough-edge-1" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="3" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.8" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+      <!-- 짝수 프레임 노이즈 -->
+      <filter id="rough-edge-2" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="14" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.8" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="container">
+    <header>
+      <h1>🎨 인플레이션 학습용 프리미엄 핸드드론 SVG 카탈로그</h1>
+      <p class="subtitle">모든 씬/비트(Beat)별 리디자인 SVG 시각 테스트베드 및 복사용 가이드</p>
+    </header>
+
+    <div class="top-info">
+      <h2>💡 카탈로그 이용 안내</h2>
+      <p>
+        이 페이지는 프로젝트 파일(`App.tsx`)을 아직 건드리지 않은 채, <strong>각 비트(Beat)별로 디자인된 11개의 아날로그 손그림 SVG들을 라이브로 검수</strong>하기 위한 곳입니다.
+      </p>
+      <p>
+        모든 SVG 일러스트는 니키 케이스 스타일로 미세하게 wiggling하며, 채색이 살짝 삐져나온 <strong>Offset Fill 기법</strong>이 조화롭게 입혀져 있습니다.
+        각 카드 하단의 <strong>[React 컴포넌트 코드 복사]</strong> 버튼을 누르면 프로젝트에 바로 덮어쓸 수 있는 JSX 코드가 클립보드에 복사됩니다.
+      </p>
+    </div>
+
+    <!-- 11개 씬 그리드 시작 -->
+    <div class="catalog-grid">
+
+      <!-- 1. KingSketch -->
+      <div class="catalog-card">
+        <div class="card-header">
+          <h3 class="card-title">1. KingSketch</h3>
+          <span class="card-meta">s1-b1 (왕의 고민)</span>
+        </div>
+        <div class="visual-stage">
+          <svg viewBox="0 0 260 220" class="sketch-svg wobbly-line-active">
+            <g class="color-offset">
+              <path d="M 60,170 C 50,195 70,205 130,205 C 190,205 210,195 200,170 C 185,150 160,140 130,140 C 100,140 75,150 60,170 Z" fill="var(--color-pink-soft)" />
+              <circle cx="130" cy="100" r="42" fill="#fff" />
+              <path d="M 92,65 L 98,32 L 115,48 L 130,28 L 145,48 L 162,32 L 168,65 Z" fill="var(--color-yellow-soft)" />
+              <path d="M 185,55 C 195,38 220,38 230,48 C 240,58 235,75 222,80 C 212,85 198,80 185,55 Z" fill="#fff" />
+              <circle cx="208" cy="60" r="10" fill="var(--color-yellow-soft)" />
+            </g>
+            <path d="M 60,170 C 50,195 70,205 130,205 C 190,205 210,195 200,170 C 185,150 160,140 130,140 Z" class="sketch-line-fill" fill="none" />
+            <path d="M 90,145 C 100,165 110,165 130,165 C 150,165 160,165 170,145" class="sketch-line thin" fill="none" />
+            <circle cx="102" cy="182" r="3" fill="var(--color-ink)" />
+            <circle cx="130" cy="187" r="3" fill="var(--color-ink)" />
+            <circle cx="158" cy="182" r="3" fill="var(--color-ink)" />
+            <circle cx="130" cy="100" r="42" class="sketch-line-fill" fill="none" />
+            <path d="M 92,65 L 98,32 L 115,48 L 130,28 L 145,48 L 162,32 L 168,65 Z" class="sketch-line-fill" fill="none" />
+            <circle cx="115" cy="48" r="3.5" fill="#d13d4c" />
+            <circle cx="130" cy="28" r="3.5" fill="#218a4b" />
+            <circle cx="145" cy="48" r="3.5" fill="#d13d4c" />
+            <path d="M 108,94 Q 114,88 120,94" class="sketch-line thin" fill="none" />
+            <path d="M 140,94 Q 146,88 152,94" class="sketch-line thin" fill="none" />
+            <path d="M 104,85 L 120,90" class="sketch-line thin" />
+            <path d="M 156,85 L 140,90" class="sketch-line thin" />
+            <path d="M 166,93 Q 173,100 169,105 Q 164,105 166,93 Z" fill="var(--color-blue-soft)" stroke="var(--color-ink)" stroke-width="1.8" />
+            <path d="M 130,97 Q 133,104 128,107" class="sketch-line thin" fill="none" />
+            <path d="M 118,121 Q 124,116 130,121 T 142,121" class="sketch-line thin" fill="none" />
+            <path d="M 185,55 C 195,38 220,38 230,48 C 240,58 235,75 222,80 C 212,85 198,80 185,55 Z" class="sketch-line-fill" fill="none" />
+            <circle cx="178" cy="74" r="5" class="sketch-line-fill" fill="#fff" />
+            <circle cx="170" cy="86" r="3" class="sketch-line-fill" fill="#fff" />
+            <circle cx="208" cy="60" r="10" stroke="var(--color-ink)" stroke-width="2" fill="none" />
+            <text x="208" y="64" text-anchor="middle" font-size="12" font-weight="bold" fill="var(--color-ink)">$</text>
+            <text x="130" y="215" text-anchor="middle" class="svg-label">세금은 싫고 돈은 필요하고...</text>
+          </svg>
+        </div>
+        <p class="card-desc">세금을 걷지 않고 돈을 충당하고 싶어 식은땀을 흘리며 머릿속에 동전($) 주머니가 뭉게뭉게 피어오르는 귀여운 임금의 초상입니다.</p>
+        <div class="btn-container">
+          <button class="hand-button" onclick="copyCode('king')">React 컴포넌트 코드 복사</button>
+        </div>
+      </div>
+
+      <!-- 2. CoinSketch -->
+      <div class="catalog-card">
+        <div class="card-header">
+          <h3 class="card-title">2. CoinSketch</h3>
+          <span class="card-meta">s1-b2 (두 은화)</span>
+        </div>
+        <div class="visual-stage">
+          <svg viewBox="0 0 280 220" class="sketch-svg wobbly-line-active">
+            <g class="color-offset">
+              <circle cx="82" cy="95" r="48" fill="var(--color-blue-soft)" />
+              <path d="M 72,105 L 75,88 L 82,94 L 89,88 L 92,105 Z" fill="var(--color-yellow-soft)" />
+              <circle cx="198" cy="95" r="48" fill="var(--color-pink-soft)" />
+              <circle cx="180" cy="78" r="6" fill="var(--color-yellow-soft)" />
+              <circle cx="218" cy="115" r="8" fill="var(--color-yellow-soft)" />
+              <circle cx="205" cy="76" r="4" fill="var(--color-yellow-soft)" />
+            </g>
+            <ellipse cx="82" cy="155" rx="36" ry="6" fill="rgba(31,31,29,0.08)" />
+            <circle cx="82" cy="95" r="48" class="sketch-line-fill" fill="none" />
+            <circle cx="82" cy="95" r="40" fill="none" stroke="var(--color-ink)" stroke-width="1.8" stroke-dasharray="6 4" />
+            <path d="M 72,105 L 75,88 L 82,94 L 89,88 L 92,105 Z" stroke="var(--color-ink)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            <path d="M 40,55 L 43,62 L 50,65 L 43,68 L 40,75 L 37,68 L 30,65 L 37,62 Z" fill="#fff" stroke="var(--color-ink)" stroke-width="1.5" />
+            <path d="M 120,60 L 122,65 L 127,67 L 122,69 L 120,74 L 118,69 L 113,67 L 118,65 Z" fill="#fff" stroke="var(--color-ink)" stroke-width="1" />
+            <text x="82" y="172" text-anchor="middle" class="svg-label">은화 (은 92.5%)</text>
+            <text x="82" y="190" text-anchor="middle" class="svg-label small text-ink-soft" fill="#5f615d">"묵직하고 반짝여요!"</text>
+
+            <path d="M 128,95 Q 140,88 152,95" class="sketch-line thin" fill="none" />
+            <path d="M 146,90 L 153,95 L 146,100" class="sketch-line thin" fill="none" />
+
+            <ellipse cx="198" cy="155" rx="36" ry="6" fill="rgba(31,31,29,0.08)" />
+            <circle cx="198" cy="95" r="48" class="sketch-line-fill" fill="none" />
+            <path d="M 172,112 C 182,105 188,120 196,110" stroke="var(--color-ink)" stroke-width="2" fill="none" stroke-linecap="round" />
+            <text x="198" y="108" text-anchor="middle" font-size="38" font-weight="bold" fill="var(--color-ink)">?</text>
+            <text x="198" y="172" text-anchor="middle" class="svg-label">대악화 (은 25%)</text>
+            <text x="198" y="190" text-anchor="middle" class="svg-label small text-ink-soft" fill="#5f615d">"구리가 넘쳐 칙칙해요"</text>
+          </svg>
+        </div>
+        <p class="card-desc">눈부시게 샤방샤방 빛나는 전통 순은화와, 구리 및 잡철 함량이 많아 거무스름하고 물음표가 박힌 대악화 은화의 극적인 대조입니다.</p>
+        <div class="btn-container">
+          <button class="hand-button" onclick="copyCode('coins')">React 컴포넌트 코드 복사</button>
+        </div>
+      </div>
+
+      <!-- 3. MerchantSketch -->
+      <div class="catalog-card">
+        <div class="card-header">
+          <h3 class="card-title">3. MerchantSketch</h3>
+          <span class="card-meta">s1-b3 (상인의 고기)</span>
+        </div>
+        <div class="visual-stage">
+          <svg viewBox="0 0 280 220" class="sketch-svg wobbly-line-active">
+            <g class="color-offset">
+              <path d="M 22,145 L 145,145 L 135,195 L 32,195 Z" fill="var(--color-yellow-soft)" />
+              <path d="M 60,125 C 50,90 90,75 115,95 C 125,105 125,125 100,135 Z" fill="var(--color-pink-soft)" />
+              <path d="M 160,150 C 160,125 175,115 205,115 C 235,115 250,125 250,150 Z" fill="var(--color-green-soft)" />
+              <circle cx="205" cy="80" r="32" fill="#fff" />
+              <path d="M 175,70 C 175,50 200,45 220,50 L 225,72 Z" fill="var(--color-blue-soft)" />
+              <path d="M 100,32 C 80,12 150,7 160,27 C 160,37 150,47 130,47 Z" fill="#fff" />
+            </g>
+            <path d="M 22,145 L 145,145 L 135,195 L 32,195 Z" class="sketch-line-fill" fill="none" />
+            <path d="M 32,160 L 138,160 M 30,178 L 132,178" class="sketch-line thin" fill="none" opacity="0.35" />
+            <ellipse cx="85" cy="135" rx="28" ry="4" fill="rgba(31,31,29,0.12)" />
+            <path d="M 40,122 L 75,112 M 40,118 Q 35,110 40,105 Q 48,110 42,118" class="sketch-line" fill="#fff" />
+            <path d="M 60,125 C 50,90 90,75 115,95 C 125,105 125,125 100,135 C 80,140 65,135 60,125 Z" class="sketch-line-fill" fill="none" />
+            <path d="M 85,115 C 80,105 95,100 100,110 C 105,120 90,125 85,115 Z" fill="none" stroke="var(--color-ink)" stroke-width="2" />
+            <text x="85" y="172" text-anchor="middle" class="svg-label">맛있는 고기</text>
+
+            <path d="M 160,150 C 160,125 175,115 205,115 C 235,115 250,125 250,150 L 255,200 L 155,200 Z" class="sketch-line-fill" fill="none" />
+            <path d="M 178,118 L 192,142 M 232,118 L 218,142" class="sketch-line thin" />
+            <circle cx="205" cy="80" r="32" class="sketch-line-fill" fill="none" />
+            <path d="M 175,70 C 175,50 200,45 220,50 L 225,72 Z" class="sketch-line-fill" fill="none" />
+            <path d="M 188,80 L 196,82" class="sketch-line thin" />
+            <path d="M 214,80 L 222,82" class="sketch-line thin" />
+            <path d="M 184,72 L 198,70" class="sketch-line" />
+            <path d="M 226,70 L 212,74" class="sketch-line" />
+            <path d="M 203,84 Q 206,88 201,90" class="sketch-line thin" fill="none" />
+            <path d="M 190,98 Q 205,92 220,98 Q 205,104 190,98 Z" fill="var(--color-ink)" stroke="var(--color-ink)" stroke-width="2.5" />
+            <path d="M 197,106 Q 205,101 213,106" class="sketch-line thin" fill="none" />
+
+            <path d="M 100,32 C 80,12 150,7 160,27 C 160,37 150,47 130,47 C 120,52 115,57 112,52 C 105,50 100,42 100,32 Z" class="sketch-line-fill" fill="none" />
+            <circle cx="118" cy="26" r="6" fill="var(--color-yellow-soft)" stroke="var(--color-ink)" stroke-width="1.5" />
+            <circle cx="130" cy="26" r="6" fill="var(--color-yellow-soft)" stroke="var(--color-ink)" stroke-width="1.5" />
+            <circle cx="142" cy="26" r="6" fill="var(--color-yellow-soft)" stroke="var(--color-ink)" stroke-width="1.5" />
+            <text x="130" y="40" text-anchor="middle" font-size="9" font-weight="bold" fill="var(--color-ink)">은화 3개!</text>
+          </svg>
+        </div>
+        <p class="card-desc">돈가치가 떨어지자 가판대 위에 거대한 만화 고기(Ham bone)를 올려두고 은화 3개는 주어야 팔겠다며 엄포를 놓는 성난 콧수염 상인입니다.</p>
+        <div class="btn-container">
+          <button class="hand-button" onclick="copyCode('merchant')">React 컴포넌트 코드 복사</button>
+        </div>
+      </div>
+
+      <!-- 4. FlowSketch -->
+      <div class="catalog-card">
+        <div class="card-header">
+          <h3 class="card-title">4. FlowSketch</h3>
+          <span class="card-meta">s1-b4 (물가 흐름)</span>
+        </div>
+        <div class="visual-stage">
+          <svg viewBox="0 0 300 220" class="sketch-svg wobbly-line-active">
+            <g class="color-offset">
+              <rect x="15" y="45" width="80" height="95" rx="12" fill="var(--color-blue-soft)" />
+              <circle cx="55" cy="85" r="18" fill="var(--color-yellow-soft)" />
+              <rect x="145" y="45" width="80" height="95" rx="12" fill="var(--color-pink-soft)" />
+              <path d="M 171,90 H 199 L 195,109 H 175 Z" fill="#fff" />
+              <rect x="275" y="45" width="80" height="95" rx="12" fill="var(--color-yellow-soft)" />
+              <path d="M 315,75 C 300,75 300,95 315,107 Z" fill="var(--color-pink-soft)" />
+            </g>
+            <!-- 1단계 -->
+            <rect x="15" y="45" width="80" height="95" rx="12" class="sketch-line-fill" fill="none" />
+            <circle cx="55" cy="85" r="18" class="sketch-line-fill" fill="none" />
+            <text x="55" y="91" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--color-ink)">₩</text>
+            <path d="M 55,108 L 55,121 M 50,116 L 55,121 L 60,116" class="sketch-line thin" stroke="#d13d4c" fill="none" />
+            <text x="55" y="132" text-anchor="middle" class="svg-label small">화폐가치 하락</text>
+
+            <path d="M 103,90 Q 120,83 137,90" class="sketch-line thin" fill="none" />
+            <path d="M 131,85 L 138,90 L 132,95" class="sketch-line thin" fill="none" />
+
+            <!-- 2단계 -->
+            <rect x="145" y="45" width="80" height="95" rx="12" class="sketch-line-fill" fill="none" />
+            <path d="M 171,90 H 199 L 195,109 H 175 Z" class="sketch-line-fill" fill="none" />
+            <path d="M 178,90 Q 185,73 192,90" class="sketch-line thin" fill="none" />
+            <path d="M 185,103 L 185,93 M 180,97 L 185,93 L 190,97" stroke="#d13d4c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            <text x="185" y="132" text-anchor="middle" class="svg-label small">물가 상승</text>
+
+            <path d="M 233,90 Q 250,83 267,90" class="sketch-line thin" fill="none" />
+            <path d="M 261,85 L 268,90 L 262,95" class="sketch-line thin" fill="none" />
+
+            <!-- 3단계 -->
+            <rect x="275" y="45" width="80" height="95" rx="12" class="sketch-line-fill" fill="none" />
+            <path d="M 315,75 C 300,75 300,95 315,107 C 330,95 330,75 315,75 Z" class="sketch-line-fill" fill="none" />
+            <path d="M 315,87 C 310,90 310,100 315,103 C 320,100 320,90 315,87 Z" fill="var(--color-yellow-soft)" stroke="var(--color-ink)" stroke-width="1.5" />
+            <text x="315" y="132" text-anchor="middle" class="svg-label small">인플레이션</text>
+            <text x="150" y="182" text-anchor="middle" class="svg-label">화폐의 가치가 하락하면, 물가는 풍선처럼 팽창합니다.</text>
+          </svg>
+        </div>
+        <p class="card-desc">돈가치 하락(추락 동전) ➔ 마트 바구니 상승(바구니) ➔ 풍선처럼 날아올라 폭발하려는 인플레이션을 하나의 감정 이정표 아이콘으로 연결했습니다.</p>
+        <div class="btn-container">
+          <button class="hand-button" onclick="copyCode('flow')">React 컴포넌트 코드 복사</button>
+        </div>
+      </div>
+
+      <!-- 5. MoneySketch -->
+      <div class="catalog-card">
+        <div class="card-header">
+          <h3 class="card-title">5. MoneySketch</h3>
+          <span class="card-meta">s2-b1 (지폐의 팽창)</span>
+        </div>
+        <div class="visual-stage">
+          <svg viewBox="0 0 280 220" class="sketch-svg wobbly-line-active">
+            <g class="color-offset">
+              <path d="M 25,90 C 5,70 15,110 30,100 Z" fill="#fff" />
+              <rect x="30" y="80" width="65" height="38" rx="6" fill="var(--color-green-soft)" />
+              <path d="M 250,80 C 270,60 260,100 245,90 Z" fill="#fff" />
+              <rect x="180" y="70" width="65" height="38" rx="6" fill="var(--color-green-soft)" />
+              <rect x="102" y="35" width="68" height="40" rx="6" fill="var(--color-green-soft)" />
+              <circle cx="136" cy="55" r="11" fill="#fff" />
+              <path d="M 82,110 C 60,90 70,135 90,120 Z" fill="#fff" />
+              <path d="M 168,110 C 190,90 180,135 160,120 Z" fill="#fff" />
+              <rect x="90" y="95" width="70" height="42" rx="6" fill="var(--color-green-soft)" />
+              <circle cx="125" cy="116" r="12" fill="#fff" />
+            </g>
+            <g opacity="0.12" transform="translate(10, 5)">
+              <circle cx="130" cy="50" r="30" class="sketch-line" stroke-dasharray="10 5" fill="none" />
+              <path d="M 130,10 L 130,90 M 90,50 L 170,50" class="sketch-line" />
+            </g>
+            <!-- 좌측 날개 지폐 -->
+            <g transform="translate(30, 80) rotate(-12)">
+              <path d="M -5,10 C -25,-10 -15,30 0,20 Z" fill="#fff" stroke="var(--color-ink)" stroke-width="2" stroke-linecap="round" />
+              <rect width="65" height="38" rx="6" class="sketch-line-fill" fill="none" />
+              <circle cx="32" cy="19" r="10" fill="none" stroke="var(--color-ink)" stroke-width="1.5" />
+              <text x="32" y="24" text-anchor="middle" font-size="14" font-weight="bold" fill="var(--color-ink)">₩</text>
+            </g>
+            <!-- 우측 날개 지폐 -->
+            <g transform="translate(185, 70) rotate(15)">
+              <path d="M 70,10 C 90,-10 80,30 65,20 Z" fill="#fff" stroke="var(--color-ink)" stroke-width="2" stroke-linecap="round" />
+              <rect width="65" height="38" rx="6" class="sketch-line-fill" fill="none" />
+              <circle cx="32" cy="19" r="10" fill="none" stroke="var(--color-ink)" stroke-width="1.5" />
+              <text x="32" y="24" text-anchor="middle" font-size="14" font-weight="bold" fill="var(--color-ink)">₩</text>
+            </g>
+            <!-- 상단 지폐 -->
+            <g transform="translate(102, 35) rotate(4)">
+              <rect width="68" height="40" rx="6" class="sketch-line-fill" fill="none" />
+              <rect x="4" y="4" width="60" height="32" rx="3" fill="none" stroke="var(--color-ink)" stroke-width="1.2" stroke-dasharray="3 2" />
+              <circle cx="34" cy="20" r="11" class="sketch-line-fill" fill="none" />
+              <text x="34" y="26" text-anchor="middle" font-size="16" font-weight="bold" fill="var(--color-ink)">₩</text>
+            </g>
+            <!-- 메인 지폐 -->
+            <g transform="translate(90, 95) rotate(-5)">
+              <path d="M -8,15 C -30,-5 -20,40 0,25 Z" fill="#fff" stroke="var(--color-ink)" stroke-width="2.5" stroke-linecap="round" />
+              <path d="M 78,15 C 100,-5 90,40 70,25 Z" fill="#fff" stroke="var(--color-ink)" stroke-width="2.5" stroke-linecap="round" />
+              <rect width="70" height="42" rx="6" class="sketch-line-fill" fill="none" />
+              <rect x="4" y="4" width="62" height="34" rx="3" fill="none" stroke="var(--color-ink)" stroke-width="1.5" />
+              <circle cx="35" cy="21" r="12" class="sketch-line-fill" fill="none" />
+              <text x="35" y="27" text-anchor="middle" font-size="18" font-weight="black" fill="var(--color-ink)">₩</text>
+            </g>
+            <path d="M 60,155 L 63,160 L 68,162 L 63,164 L 60,169 L 57,164 L 52,162 L 57,160 Z" fill="#fff" stroke="var(--color-ink)" stroke-width="1" />
+            <path d="M 210,145 L 212,150 L 217,152 L 212,154 L 210,159 L 208,154 L 203,152 L 208,150 Z" fill="#fff" stroke="var(--color-ink)" stroke-width="1" />
+            <ellipse cx="70" cy="165" rx="14" ry="2.5" fill="rgba(31,31,29,0.06)" />
+            <ellipse cx="130" cy="167" rx="24" ry="3.5" fill="rgba(31,31,29,0.08)" />
+            <ellipse cx="200" cy="165" rx="16" ry="2.5" fill="rgba(31,31,29,0.06)" />
+            <text x="140" y="195" text-anchor="middle" class="svg-label">돈이 너무 흔해지면, 그 실질 가치는 공중 분해됩니다.</text>
+          </svg>
+        </div>
+        <p class="card-desc">돈을 과도하게 많이 찍어내자(배경 인쇄 톱니바퀴), 지폐들이 날개(천사 날개)를 달고 공중으로 날아가버리는 실질 가치 하락의 환유적 스케치입니다.</p>
+        <div class="btn-container">
+          <button class="hand-button" onclick="copyCode('money')">React 컴포넌트 코드 복사</button>
+        </div>
+      </div>
+
+      <!-- 6. BankFlowSketch -->
+      <div class="catalog-card">
+        <div class="card-header">
+          <h3 class="card-title">6. BankFlowSketch</h3>
+          <span class="card-meta">s2-b3 (자금의 흐름)</span>
+        </div>
+        <div class="visual-stage">
+          <svg viewBox="0 0 300 220" class="sketch-svg wobbly-line-active">
+            <g class="color-offset">
+              <path d="M 30,95 H 120 L 75,55 Z" fill="var(--color-blue-soft)" />
+              <rect x="40" y="95" width="12" height="55" fill="#fff" />
+              <rect x="69" y="95" width="12" height="55" fill="#fff" />
+              <rect x="98" y="95" width="12" height="55" fill="#fff" />
+              <rect x="30" y="150" width="90" height="15" fill="var(--color-blue-soft)" />
+              <path d="M 120,80 H 150 V 95 H 120 Z" fill="var(--color-yellow-soft)" />
+              <circle cx="135" cy="70" r="10" fill="#fff" />
+              <path d="M 210,155 V 110 H 235 L 235,120 H 260 L 260,130 H 280 V 155 Z" fill="var(--color-pink-soft)" />
+              <path d="M 270,90 C 265,82 280,77 282,87 Z" fill="#fff" />
+            </g>
+            <g transform="translate(15, 30)">
+              <path d="M 15,65 H 105 L 60,25 Z" class="sketch-line-fill" fill="none" />
+              <rect x="25" y="65" width="12" height="55" fill="#fff" class="sketch-line-fill" />
+              <rect x="54" y="65" width="12" height="55" fill="#fff" class="sketch-line-fill" />
+              <rect x="83" y="65" width="12" height="55" fill="#fff" class="sketch-line-fill" />
+              <rect x="15" y="120" width="90" height="15" fill="none" class="sketch-line-fill" />
+              <text x="60" y="52" text-anchor="middle" font-size="12" font-weight="black" fill="var(--color-ink)" letter-spacing="1">CENTRAL</text>
+              <text x="60" y="152" text-anchor="middle" class="svg-label">중앙은행</text>
+            </g>
+            <g transform="translate(125, 75)">
+              <path d="M -5,5 H 25 V 20 H -5 Z" fill="none" class="sketch-line-fill" />
+              <circle cx="10" cy="-5" r="10" fill="#fff" class="sketch-line-fill" />
+              <path d="M 10,-15 V 5 M 0,-5 H 20" stroke="var(--color-ink)" stroke-width="2" />
+              <path d="M 20,15 Q 40,15 50,30" class="sketch-line" fill="none" />
+            </g>
+            <path d="M 125,95 Q 165,75 205,100" class="sketch-line thin" stroke-dasharray="5 5" fill="none" />
+            <circle cx="165" cy="83" r="8" fill="var(--color-yellow-soft)" class="sketch-line-fill" />
+            <text x="165" y="87" text-anchor="middle" font-size="9" font-weight="bold" fill="var(--color-ink)">₩</text>
+
+            <g transform="translate(200, 75)">
+              <ellipse cx="45" cy="85" rx="35" ry="5" fill="rgba(31,31,29,0.08)" />
+              <path d="M 10,80 V 35 H 35 L 35,45 H 60 L 60,55 H 80 V 80 Z" class="sketch-line-fill" fill="none" />
+              <rect x="20" y="55" width="8" height="12" fill="#fff" class="sketch-line" />
+              <rect x="42" y="60" width="8" height="12" fill="#fff" class="sketch-line" />
+              <rect x="65" y="22" width="10" height="33" fill="var(--color-ink)" />
+              <path d="M 70,15 C 65,7 80,2 82,12 C 88,9 92,17 85,19 Z" fill="#fff" class="sketch-line-fill" />
+              <text x="45" y="105" text-anchor="middle" class="svg-label">기업 (공장)</text>
+            </g>
+          </svg>
+        </div>
+        <p class="card-desc">클래식한 건축 기둥을 품은 중앙은행 사원과, 중앙은행 옆에 설치된 이자 밸브(금리 파이프)를 거쳐 매연을 뿜으며 바쁘게 움직이는 공장의 순환도입니다.</p>
+        <div class="btn-container">
+          <button class="hand-button" onclick="copyCode('bankFlow')">React 컴포넌트 코드 복사</button>
+        </div>
+      </div>
+
+      <!-- 7. SupplyDemandSketch -->
+      <div class="catalog-card">
+        <div class="card-header">
+          <h3 class="card-title">7. SupplyDemandSketch</h3>
+          <span class="card-meta">s3-b1 (수요 공급)</span>
+        </div>
+        <div class="visual-stage">
+          <svg viewBox="0 0 300 220" class="sketch-svg wobbly-line-active">
+            <path d="M 60,135 Q 160,133 260,135" stroke="rgba(31,31,29,0.05)" stroke-width="1.8" stroke-dasharray="4 4" fill="none" />
+            <path d="M 60,95 Q 160,97 260,95" stroke="rgba(31,31,29,0.05)" stroke-width="1.8" stroke-dasharray="4 4" fill="none" />
+            <path d="M 120,35 Q 123,105 120,175" stroke="rgba(31,31,29,0.05)" stroke-width="1.8" stroke-dasharray="4 4" fill="none" />
+            <path d="M 180,35 Q 183,105 180,175" stroke="rgba(31,31,29,0.05)" stroke-width="1.8" stroke-dasharray="4 4" fill="none" />
+
+            <path d="M 60,175 V 35 M 60,175 H 260" class="sketch-line" fill="none" />
+            <path d="M 55,42 L 60,35 L 65,42 M 253,170 L 260,175 L 253,180" class="sketch-line thin" fill="none" />
+
+            <text x="35" y="45" class="svg-label">가격 (P)</text>
+            <text x="250" y="196" className="svg-label">거래량 (Q)</text>
+
+            <path d="M 80,145 Q 140,115 220,55" class="sketch-line supply" fill="none" />
+            <text x="230" y="55" class="svg-label small" fill="#d13d4c">공급 (S)</text>
+
+            <path d="M 80,55 Q 140,115 220,145" class="sketch-line demand" fill="none" />
+            <text x="230" y="152" class="svg-label small" fill="#218a4b">수요 (D1)</text>
+
+            <path d="M 120,55 Q 180,115 260,145" class="sketch-line demand shifted" fill="none" stroke-dasharray="6 4" />
+            <text x="260" y="135" class="svg-label small" fill="#218a4b" opacity="0.75">수요 증가 (D2)</text>
+
+            <circle cx="140" cy="104" r="6" fill="var(--color-ink)" />
+            <g transform="translate(125, 80)">
+              <rect width="28" height="16" rx="4" fill="#fff" stroke="var(--color-ink)" stroke-width="1.2" />
+              <text x="14" y="12" text-anchor="middle" font-size="10" font-weight="bold">기존</text>
+            </g>
+
+            <circle cx="178" cy="90" r="7" fill="#d13d4c" />
+            <g transform="translate(178, 62)">
+              <path d="M 0,10 L 10,0 H 42 V 16 H 5 C 0,16 0,12 0,10" fill="#fff" stroke="#d13d4c" stroke-width="1.2" />
+              <text x="24" y="12" text-anchor="middle" font-size="9" font-weight="bold" fill="#d13d4c">가격 상승! ↑</text>
+            </g>
+
+            <g transform="translate(85, 30)">
+              <path d="M 0,25 C -5,22 -8,15 -2,12 C 4,9 12,20 15,22 C 18,18 22,25 18,30" fill="#fff" class="sketch-line-fill" />
+              <text x="-18" y="10" font-size="9" font-weight="bold" fill="#5f615d" transform="rotate(-15)">소비 급증! ➔</text>
+            </g>
+          </svg>
+        </div>
+        <p class="card-desc">수학 교과서 그래프에 미세 흔들림 격자와 꼬불 곡선을 가미하고, 수요선을 밀치는 만화 손가락 소품을 얹어 생기를 띤 수요공급도입니다.</p>
+        <div class="btn-container">
+          <button class="hand-button" onclick="copyCode('supplyDemand')">React 컴포넌트 코드 복사</button>
+        </div>
+      </div>
+
+      <!-- 8. NewsSketch -->
+      <div class="catalog-card">
+        <div class="card-header">
+          <h3 class="card-title">8. NewsSketch</h3>
+          <span class="card-meta">s3-b2 (뉴스 판별)</span>
+        </div>
+        <div class="visual-stage">
+          <svg viewBox="0 0 280 220" class="sketch-svg wobbly-line-active">
+            <g class="color-offset">
+              <rect x="60" y="50" width="130" height="110" rx="10" fill="#f6f6f6" />
+              <rect x="75" y="40" width="135" height="115" rx="10" fill="#fff" />
+              <rect x="85" y="50" width="115" height="20" fill="var(--color-yellow-soft)" />
+              <rect x="90" y="80" width="32" height="42" rx="4" fill="var(--color-blue-soft)" />
+              <circle cx="196" cy="121" r="18" fill="rgba(223, 244, 255, 0.45)" />
+              <rect x="210" y="135" width="6" height="25" rx="2" fill="var(--color-yellow-soft)" />
+            </g>
+            <ellipse cx="140" cy="185" rx="90" ry="8" fill="rgba(31,31,29,0.06)" />
+
+            <g transform="translate(60, 50) rotate(-6)">
+              <rect width="130" height="110" rx="10" class="sketch-line-fill" fill="none" />
+              <path d="M 15,20 H 115 M 15,35 H 100 M 15,50 H 110" class="sketch-line thin" opacity="0.3" fill="none" />
+            </g>
+
+            <g transform="translate(75, 40) rotate(3)">
+              <rect width="135" height="115" rx="10" class="sketch-line-fill" fill="none" />
+              <rect x="10" y="10" width="115" height="20" class="sketch-line-fill" fill="none" />
+              <text x="67" y="24" text-anchor="middle" font-size="12" font-weight="black" fill="var(--color-ink)" letter-spacing="2">DAILY NEWS</text>
+
+              <g transform="translate(15, 40)">
+                <rect width="32" height="42" rx="4" class="sketch-line-fill" fill="none" />
+                <ellipse cx="16" cy="6" rx="10" ry="3" fill="#fff" stroke="var(--color-ink)" stroke-width="1.5" />
+                <path d="M 6,6 V 36 C 6,39 26,39 26,36 V 6" fill="none" stroke="var(--color-ink)" stroke-width="1.5" />
+                <ellipse cx="16" cy="36" rx="10" ry="3" fill="none" stroke="var(--color-ink)" stroke-width="1.5" />
+                <line x1="6" y1="20" x2="26" y2="20" stroke="var(--color-ink)" stroke-width="1.5" />
+              </g>
+              <path d="M 58,45 H 120 M 58,58 H 115 M 58,71 H 122 M 15,95 H 120 M 15,105 H 95" class="sketch-line thin" fill="none" />
+              <path d="M 115,20 L 117,23 L 121,24 L 118,27 L 119,31 L 115,29 L 111,31 L 112,27 L 109,24 L 113,23 Z" fill="#d13d4c" />
+            </g>
+
+            <g transform="translate(170, 95) rotate(-25)">
+              <rect x="22" y="45" width="8" height="35" rx="3" class="sketch-line-fill" fill="none" />
+              <circle cx="26" cy="26" r="24" fill="rgba(223, 244, 255, 0.45)" class="sketch-line-fill" />
+              <path d="M 14,14 L 18,18 M 16,12 L 20,16" stroke="#fff" stroke-width="2.2" stroke-linecap="round" />
+            </g>
+          </svg>
+        </div>
+        <p class="card-desc">타블로이드 영자 신문 기면과, 뉴스를 분석하고 판별한다는 테마에 부합하는 흔들거리는 왕돋보기 안경 소품의 레이아웃입니다.</p>
+        <div class="btn-container">
+          <button class="hand-button" onclick="copyCode('news')">React 컴포넌트 코드 복사</button>
+        </div>
+      </div>
+
+      <!-- 9. PeopleSketch -->
+      <div class="catalog-card">
+        <div class="card-header">
+          <h3 class="card-title">9. PeopleSketch</h3>
+          <span class="card-meta">s4-b1 (인물 카드)</span>
+        </div>
+        <div class="visual-stage">
+          <svg viewBox="0 0 280 220" class="sketch-svg wobbly-line-active">
+            <g class="color-offset">
+              <rect x="35" y="45" width="76" height="110" rx="10" fill="#fff" />
+              <circle cx="73" cy="83" r="16" fill="#fff" />
+              <path d="M 57,99 H 89 V 107 Z" fill="var(--color-green-soft)" />
+              <path d="M 93,60 L 95,63 L 99,64 L 95,65 L 93,68 Z" fill="#f7d65b" />
+              <rect x="165" y="45" width="76" height="110" rx="10" fill="#fff" />
+              <circle cx="203" cy="83" r="16" fill="#fff" />
+              <path d="M 189,29 H 219 Q 204,16 189,29" fill="var(--color-yellow-soft)" />
+              <path d="M 187,99 H 219 V 107 Z" fill="var(--color-pink-soft)" />
+              <rect x="98" y="30" width="84" height="120" rx="12" fill="var(--color-yellow-soft)" />
+              <circle cx="140" cy="78" r="22" fill="#fff" />
+              <rect x="113" y="115" width="54" height="18" rx="4" fill="var(--color-blue-soft)" />
+            </g>
+            <!-- 좌측 카드 -->
+            <g transform="translate(35, 45) rotate(-15)">
+              <rect width="76" height="110" rx="10" class="sketch-line-fill" fill="none" />
+              <rect x="5" y="5" width="66" height="100" rx="7" fill="none" stroke="#218a4b" stroke-width="1.8" stroke-dasharray="3 2" />
+              <circle cx="38" cy="38" r="16" class="sketch-line-fill" fill="none" />
+              <circle cx="33" cy="35" r="1.5" fill="var(--color-ink)" />
+              <circle cx="43" cy="35" r="1.5" fill="var(--color-ink)" />
+              <path d="M 32,42 Q 38,48 44,42" fill="none" stroke="var(--color-ink)" stroke-width="2.2" stroke-linecap="round" />
+              <path d="M 22,54 H 54 V 62 Z" class="sketch-line thin" fill="none" />
+              <text x="38" y="76" text-anchor="middle" font-size="11" font-weight="bold" fill="var(--color-ink)">채무자</text>
+              <path d="M 58,15 L 60,18 L 64,19 L 60,20 L 58,23 L 56,20 L 52,19 L 56,18 Z" fill="#f7d65b" />
+            </g>
+
+            <!-- 우측 카드 -->
+            <g transform="translate(165, 45) rotate(15)">
+              <rect width="76" height="110" rx="10" class="sketch-line-fill" fill="none" />
+              <rect x="5" y="5" width="66" height="100" rx="7" fill="none" stroke="#d13d4c" stroke-width="1.8" stroke-dasharray="3 2" />
+              <circle cx="38" cy="38" r="16" class="sketch-line-fill" fill="none" />
+              <circle cx="33" cy="35" r="1.5" fill="var(--color-ink)" />
+              <circle cx="43" cy="35" r="1.5" fill="var(--color-ink)" />
+              <path d="M 32,44 Q 38,38 44,44" fill="none" stroke="var(--color-ink)" stroke-width="2.2" stroke-linecap="round" />
+              <path d="M 31,38 L 29,43" stroke="var(--color-blue-soft)" stroke-width="2" stroke-linecap="round" fill="none" />
+              <path d="M 23,24 H 53 Q 38,11 23,24" fill="var(--color-yellow-soft)" stroke="var(--color-ink)" stroke-width="1.8" />
+              <path d="M 22,54 H 54 V 62 Z" class="sketch-line thin" fill="none" />
+              <text x="38" y="76" text-anchor="middle" font-size="11" font-weight="bold" fill="var(--color-ink)">월급쟁이</text>
+            </g>
+
+            <!-- 중앙 카드 -->
+            <g transform="translate(98, 30) rotate(-2)">
+              <rect width="84" height="120" rx="12" class="sketch-line-fill" fill="none" />
+              <rect x="5" y="5" width="74" height="110" rx="8" fill="none" stroke="var(--color-ink)" stroke-width="2.5" />
+              <circle cx="42" cy="48" r="22" class="sketch-line-fill" fill="none" />
+              <text x="42" y="58" text-anchor="middle" font-size="32" font-weight="black" fill="var(--color-ink)">?</text>
+              <rect x="15" y="85" width="54" height="18" rx="4" class="sketch-line-fill" fill="none" />
+              <text x="42" y="97" text-anchor="middle" font-size="11" font-weight="black" fill="var(--color-ink)">누가 웃을까</text>
+            </g>
+            <text x="140" y="195" text-anchor="middle" class="svg-label">화폐가치 하락은 누군가의 지갑을 털어 다른 이에게 줍니다.</text>
+          </svg>
+        </div>
+        <p class="card-desc">기뻐하는 웃음카드(Debtor), 한숨 쉬며 땀 흘리는 불리한 카드(Worker), 그리고 호기심의 중심 물음표 카드의 삼각 구성입니다.</p>
+        <div class="btn-container">
+          <button class="hand-button" onclick="copyCode('people')">React 컴포넌트 코드 복사</button>
+        </div>
+      </div>
+
+      <!-- 10. CentralBankSketch -->
+      <div class="catalog-card">
+        <div class="card-header">
+          <h3 class="card-title">10. CentralBankSketch</h3>
+          <span class="card-meta">s5-b1 (레버 조종)</span>
+        </div>
+        <div class="visual-stage">
+          <svg viewBox="0 0 300 220" class="sketch-svg wobbly-line-active">
+            <g class="color-offset">
+              <rect x="30" y="30" width="240" height="140" rx="14" fill="#f6f6f6" />
+              <rect x="45" y="45" width="65" height="45" rx="6" fill="var(--color-ink)" />
+              <rect x="122" y="45" width="55" height="45" rx="6" fill="var(--color-ink)" />
+              <rect x="192" y="45" width="60" height="45" rx="6" fill="var(--color-yellow-soft)" />
+              <rect x="110" y="115" width="80" height="35" rx="6" fill="var(--color-yellow-soft)" />
+              <circle cx="150" cy="94" r="12" fill="#d13d4c" />
+            </g>
+            <rect x="30" y="30" width="240" height="140" rx="14" class="sketch-line-fill" fill="none" />
+
+            <!-- 화면 1 -->
+            <g transform="translate(45, 45)">
+              <rect width="65" height="45" rx="6" fill="var(--color-ink)" />
+              <path d="M 8,36 L 22,26 L 36,32 L 56,10" fill="none" stroke="#d13d4c" stroke-width="2.8" stroke-linecap="round" />
+              <circle cx="56" cy="10" r="3.5" fill="#fff" />
+              <text x="32" y="40" text-anchor="middle" font-size="8" fill="#fff" opacity="0.8">MARKET P</text>
+            </g>
+
+            <!-- 화면 2 -->
+            <g transform="translate(122, 45)">
+              <rect width="55" height="45" rx="6" fill="var(--color-ink)" />
+              <path d="M 8,14 L 20,28 L 35,22 L 48,38" fill="none" stroke="var(--color-blue-soft)" stroke-width="2.8" stroke-linecap="round" />
+              <circle cx="48" cy="38" r="3.5" fill="#fff" />
+              <text x="27" y="40" text-anchor="middle" font-size="8" fill="#fff" opacity="0.8">JOBS</text>
+            </g>
+
+            <!-- 경보등 -->
+            <g transform="translate(192, 45)">
+              <rect width="60" height="45" rx="6" class="sketch-line-fill" fill="none" />
+              <path d="M 30,12 L 16,34 H 44 Z" fill="#d13d4c" stroke="var(--color-ink)" stroke-width="1.8" />
+              <text x="30" y="30" text-anchor="middle" font-size="12" font-weight="black" fill="#fff">!</text>
+            </g>
+
+            <!-- 마스터 레버 -->
+            <g transform="translate(110, 110)">
+              <rect x="0" y="5" width="80" height="35" rx="6" class="sketch-line-fill" fill="none" />
+              <path d="M 12,22 H 68" class="sketch-line" stroke-width="6" fill="none" />
+
+              <g class="wiggle">
+                <path d="M 40,22 L 40,-12" class="sketch-line" stroke-width="7" fill="none" />
+                <circle cx="40" cy="-16" r="12" fill="#d13d4c" class="sketch-line-fill" />
+                <circle cx="36" cy="-19" r="3.2" fill="#fff" />
+              </g>
+              <text x="-15" y="27" text-anchor="end" font-size="10" font-weight="bold" fill="#218a4b">◀ 금리 인하</text>
+              <text x="95" y="27" text-anchor="start" font-size="10" font-weight="bold" fill="#d13d4c">금리 인상 ▶</text>
+            </g>
+            <text x="150" y="195" text-anchor="middle" class="svg-label">금리 레버를 밀어 시장 통화량을 옥죄거나 풀 수 있습니다.</text>
+          </svg>
+        </div>
+        <p class="card-desc">물가 화면(붉은 그래프), 고용 화면(블루 그래프), 경보 사이렌 및 금리 인상/인하를 물리적으로 쥐고 흔들 수 있는 빨간 볼 레버 대시보드입니다.</p>
+        <div class="btn-container">
+          <button class="hand-button" onclick="copyCode('centralBank')">React 컴포넌트 코드 복사</button>
+        </div>
+      </div>
+
+      <!-- 11. DilemmaSketch -->
+      <div class="catalog-card">
+        <div class="card-header">
+          <h3 class="card-title">11. DilemmaSketch</h3>
+          <span class="card-meta">s5-b4 (물가와 고용)</span>
+        </div>
+        <div class="visual-stage">
+          <svg viewBox="0 0 280 220" class="sketch-svg wobbly-line-active">
+            <g class="color-offset">
+              <path d="M 125,175 H 155 L 150,165 H 130 Z" fill="#f2d392" />
+              <circle cx="140" cy="65" r="8" fill="var(--color-yellow-soft)" />
+              <path d="M 50,65 H 230" stroke="var(--color-ink)" stroke-width="4.5" />
+              <path d="M 30,110 C 30,125 80,125 80,110 Z" fill="var(--color-pink-soft)" />
+              <path d="M 55,78 C 40,78 40,98 55,110 Z" fill="var(--color-pink-soft)" />
+              <circle cx="200" cy="104" r="11" fill="#fff" />
+              <path d="M 190,115 H 210 V 125 H 190 Z" fill="var(--color-blue-soft)" />
+              <path d="M 175,110 C 175,125 225,125 225,110 Z" fill="var(--color-blue-soft)" />
+            </g>
+            <ellipse cx="140" cy="180" rx="45" ry="8" fill="rgba(31,31,29,0.08)" />
+            <path d="M 140,175 V 65" class="sketch-line" stroke-width="6" fill="none" />
+            <path d="M 125,175 H 155 L 150,165 H 130 Z" class="sketch-line-fill" fill="none" />
+            <circle cx="140" cy="65" r="8" class="sketch-line-fill" fill="none" />
+
+            <g transform="translate(140, 65) rotate(-5)">
+              <path d="M -90,0 H 90" class="sketch-line" stroke-width="5.5" fill="none" />
+              <path d="M -85,0 L -85,45 M -90,45 H -80" class="sketch-line thin" fill="none" />
+              <path d="M 85,0 L 85,45 M 80,45 H 90" class="sketch-line thin" fill="none" />
+
+              <!-- 왼쪽 트레이: 물가안정 -->
+              <g transform="translate(-85, 45)">
+                <path d="M -25,0 C -25,15 25,15 25,0 Z" class="sketch-line-fill" fill="none" />
+                <g transform="translate(0, -32)">
+                  <path d="M 0,-15 C -15,-15 -15,10 0,18 C 15,10 15,-15 0,-15 Z" class="sketch-line-fill" fill="none" />
+                  <path d="M -12,0 Q -18,-15 -8,-10 Q 0,-25 8,-8 Q 18,-18 12,2" fill="none" stroke="#d13d4c" stroke-width="2.2" stroke-linecap="round" />
+                  <circle cx="-4" cy="-2" r="1.5" fill="var(--color-ink)" />
+                  <circle cx="4" cy="-2" r="1.5" fill="var(--color-ink)" />
+                  <path d="M -4,5 Q 0,1 4,5" fill="none" stroke="var(--color-ink)" stroke-width="1.8" stroke-linecap="round" />
+                  <text x="0" y="-22" text-anchor="middle" font-size="10" font-weight="black" fill="#d13d4c">물가 안정</text>
+                </g>
+              </g>
+
+              <!-- 오른쪽 트레이: 고용안정 -->
+              <g transform="translate(85, 45)">
+                <path d="M -25,0 C -25,15 25,15 25,0 Z" class="sketch-line-fill" fill="none" />
+                <g transform="translate(0, -32)">
+                  <circle cx="0" cy="-6" r="11" class="sketch-line-fill" fill="none" />
+                  <circle cx="-3" cy="-8" r="1" fill="var(--color-ink)" />
+                  <circle cx="3" cy="-8" r="1" fill="var(--color-ink)" />
+                  <path d="M -3,-3 Q 0,-6 3,-3" fill="none" stroke="var(--color-ink)" stroke-width="1.5" stroke-linecap="round" />
+                  <path d="M -8,-6 L -10,-2" stroke="var(--color-blue-soft)" stroke-width="2" stroke-linecap="round" fill="none" />
+                  <path d="M -10,5 H 10 V 15 H -10 Z" class="sketch-line-fill" fill="none" />
+                  <text x="0" y="-22" text-anchor="middle" font-size="10" font-weight="black" fill="#218a4b">고용 안정</text>
+                </g>
+              </g>
+            </g>
+            <text x="140" y="200" text-anchor="middle" class="svg-label">시소의 두 추처럼, 하나를 억누르면 다른 쪽이 치솟는 딜레마입니다.</text>
+          </svg>
+        </div>
+        <p class="card-desc">물가 안정(타오르는 불꽃 풍선 캐릭터)과 고용 안정(눈물짓는 노동자)이 아날로그 저울 위에서 팽팽히 딜레마의 시소를 이루는 씬입니다.</p>
+        <div class="btn-container">
+          <button class="hand-button" onclick="copyCode('dilemma')">React 컴포넌트 코드 복사</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 복사 알람 토스트 -->
+  <div id="toast" class="toast">클립보드에 코드가 복사되었습니다!</div>
+
+  <script>
+    // 각 리디자인 컴포넌트의 소스 코드 텍스트 데이터베이스
+    const codes = {
+      king: `function KingSketch() {
+  return (
+    <svg viewBox="0 0 260 220" className="sketch-svg wobbly-line-active">
+      <g className="color-offset">
+        <path d="M 60,170 C 50,195 70,205 130,205 C 190,205 210,195 200,170 C 185,150 160,140 130,140 C 100,140 75,150 60,170 Z" fill="#ffd6df" />
+        <circle cx="130" cy="100" r="42" fill="#fff" />
+        <path d="M 92,65 L 98,32 L 115,48 L 130,28 L 145,48 L 162,32 L 168,65 Z" fill="#fff3b0" />
+        <path d="M 185,55 C 195,38 220,38 230,48 C 240,58 235,75 222,80 C 212,85 198,80 185,55 Z" fill="#fff" />
+        <circle cx="208" cy="60" r="10" fill="#fff3b0" />
+      </g>
+      <path d="M 60,170 C 50,195 70,205 130,205 C 190,205 210,195 200,170 C 185,150 160,140 130,140 Z" className="sketch-line-fill" fill="none" />
+      <path d="M 90,145 C 100,165 110,165 130,165 C 150,165 160,165 170,145" className="sketch-line thin" fill="none" />
+      <circle cx="102" cy="182" r="3" fill="#1f1f1d" />
+      <circle cx="130" cy="187" r="3" fill="#1f1f1d" />
+      <circle cx="158" cy="182" r="3" fill="#1f1f1d" />
+      <circle cx="130" cy="100" r="42" className="sketch-line-fill" fill="none" />
+      <path d="M 92,65 L 98,32 L 115,48 L 130,28 L 145,48 L 162,32 L 168,65 Z" className="sketch-line-fill" fill="none" />
+      <circle cx="115" cy="48" r="3.5" fill="#d13d4c" />
+      <circle cx="130" cy="28" r="3.5" fill="#218a4b" />
+      <circle cx="145" cy="48" r="3.5" fill="#d13d4c" />
+      <path d="M 108,94 Q 114,88 120,94" className="sketch-line thin" fill="none" />
+      <path d="M 140,94 Q 146,88 152,94" className="sketch-line thin" fill="none" />
+      <path d="M 104,85 L 120,90" className="sketch-line thin" />
+      <path d="M 156,85 L 140,90" className="sketch-line thin" />
+      <path d="M 166,93 Q 173,100 169,105 Q 164,105 166,93 Z" fill="#dff4ff" stroke="#1f1f1d" strokeWidth="1.8" />
+      <path d="M 130,97 Q 133,104 128,107" className="sketch-line thin" fill="none" />
+      <path d="M 118,121 Q 124,116 130,121 T 142,121" className="sketch-line thin" fill="none" />
+      <path d="M 185,55 C 195,38 220,38 230,48 C 240,58 235,75 222,80 C 212,85 198,80 185,55 Z" className="sketch-line-fill" fill="none" />
+      <circle cx="178" cy="74" r="5" className="sketch-line-fill" fill="#fff" />
+      <circle cx="170" cy="86" r="3" className="sketch-line-fill" fill="#fff" />
+      <circle cx="208" cy="60" r="10" stroke="#1f1f1d" strokeWidth="2" fill="none" />
+      <text x="208" y="64" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1f1f1d">$</text>
+      <text x="130" y="215" textAnchor="middle" className="svg-label">세금은 싫고 돈은 필요하고...</text>
+    </svg>
+  );
+}`,
+
+      coins: `function CoinSketch() {
+  return (
+    <svg viewBox="0 0 280 220" className="sketch-svg wobbly-line-active">
+      <g className="color-offset">
+        <circle cx="82" cy="95" r="48" fill="#dff4ff" />
+        <path d="M 72,105 L 75,88 L 82,94 L 89,88 L 92,105 Z" fill="#fff3b0" />
+        <circle cx="198" cy="95" r="48" fill="#ffd6df" />
+        <circle cx="180" cy="78" r="6" fill="#fff3b0" />
+        <circle cx="218" cy="115" r="8" fill="#fff3b0" />
+        <circle cx="205" cy="76" r="4" fill="#fff3b0" />
+      </g>
+      <ellipse cx="82" cy="155" rx="36" ry="6" fill="rgba(31,31,29,0.08)" />
+      <circle cx="82" cy="95" r="48" className="sketch-line-fill" fill="none" />
+      <circle cx="82" cy="95" r="40" fill="none" stroke="#1f1f1d" strokeWidth="1.8" strokeDasharray="6 4" />
+      <path d="M 72,105 L 75,88 L 82,94 L 89,88 L 92,105 Z" stroke="#1f1f1d" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M 40,55 L 43,62 L 50,65 L 43,68 L 40,75 L 37,68 L 30,65 L 37,62 Z" fill="#fff" stroke="#1f1f1d" strokeWidth="1.5" />
+      <path d="M 120,60 L 122,65 L 127,67 L 122,69 L 120,74 L 118,69 L 113,67 L 118,65 Z" fill="#fff" stroke="#1f1f1d" strokeWidth="1" />
+      <text x="82" y="172" textAnchor="middle" className="svg-label">은화 (은 92.5%)</text>
+      <text x="82" y="190" textAnchor="middle" className="svg-label small text-ink-soft" fill="#5f615d">"묵직하고 반짝여요!"</text>
+
+      <path d="M 128,95 Q 140,88 152,95" className="sketch-line thin" fill="none" />
+      <path d="M 146,90 L 153,95 L 146,100" className="sketch-line thin" fill="none" />
+
+      <ellipse cx="198" cy="155" rx="36" ry="6" fill="rgba(31,31,29,0.08)" />
+      <circle cx="198" cy="95" r="48" className="sketch-line-fill" fill="none" />
+      <path d="M 172,112 C 182,105 188,120 196,110" stroke="#1f1f1d" strokeWidth="2" fill="none" strokeLinecap="round" />
+      <text x="198" y="108" textAnchor="middle" fontSize="38" fontWeight="bold" fill="#1f1f1d">?</text>
+      <text x="198" y="172" textAnchor="middle" className="svg-label">대악화 (은 25%)</text>
+      <text x="198" y="190" textAnchor="middle" className="svg-label small text-ink-soft" fill="#5f615d">"구리가 넘쳐 칙칙해요"</text>
+    </svg>
+  );
+}`,
+
+      merchant: `function MerchantSketch() {
+  return (
+    <svg viewBox="0 0 280 220" className="sketch-svg wobbly-line-active">
+      <g className="color-offset">
+        <path d="M 22,145 L 145,145 L 135,195 L 32,195 Z" fill="#fff3b0" />
+        <path d="M 60,125 C 50,90 90,75 115,95 C 125,105 125,125 100,135 Z" fill="#ffd6df" />
+        <path d="M 160,150 C 160,125 175,115 205,115 C 235,115 250,125 250,150 Z" fill="#d9f6d3" />
+        <circle cx="205" cy="80" r="32" fill="#fff" />
+        <path d="M 175,70 C 175,50 200,45 220,50 L 225,72 Z" fill="#dff4ff" />
+        <path d="M 100,32 C 80,12 150,7 160,27 C 160,37 150,47 130,47 Z" fill="#fff" />
+      </g>
+      <path d="M 22,145 L 145,145 L 135,195 L 32,195 Z" className="sketch-line-fill" fill="none" />
+      <path d="M 32,160 L 138,160 M 30,178 L 132,178" className="sketch-line thin" fill="none" opacity="0.35" />
+      <ellipse cx="85" cy="135" rx="28" ry="4" fill="rgba(31,31,29,0.12)" />
+      <path d="M 40,122 L 75,112 M 40,118 Q 35,110 40,105 Q 48,110 42,118" className="sketch-line" fill="#fff" />
+      <path d="M 60,125 C 50,90 90,75 115,95 C 125,105 125,125 100,135 C 80,140 65,135 60,125 Z" className="sketch-line-fill" fill="none" />
+      <path d="M 85,115 C 80,105 95,100 100,110 C 105,120 90,125 85,115 Z" fill="none" stroke="#1f1f1d" strokeWidth="2" />
+      <text x="85" y="172" textAnchor="middle" className="svg-label">맛있는 고기</text>
+
+      <path d="M 160,150 C 160,125 175,115 205,115 C 235,115 250,125 250,150 L 255,200 L 155,200 Z" className="sketch-line-fill" fill="none" />
+      <path d="M 178,118 L 192,142 M 232,118 L 218,142" className="sketch-line thin" />
+      <circle cx="205" cy="80" r="32" className="sketch-line-fill" fill="none" />
+      <path d="M 175,70 C 175,50 200,45 220,50 L 225,72 Z" className="sketch-line-fill" fill="none" />
+      <path d="M 188,80 L 196,82" className="sketch-line thin" />
+      <path d="M 214,80 L 222,82" className="sketch-line thin" />
+      <path d="M 184,72 L 198,70" className="sketch-line" />
+      <path d="M 226,70 L 212,74" className="sketch-line" />
+      <path d="M 203,84 Q 206,88 201,90" className="sketch-line thin" fill="none" />
+      <path d="M 190,98 Q 205,92 220,98 Q 205,104 190,98 Z" fill="#1f1f1d" stroke="#1f1f1d" strokeWidth="2.5" />
+      <path d="M 197,106 Q 205,101 213,106" className="sketch-line thin" fill="none" />
+
+      <path d="M 100,32 C 80,12 150,7 160,27 C 160,37 150,47 130,47 C 120,52 115,57 112,52 C 105,50 100,42 100,32 Z" className="sketch-line-fill" fill="none" />
+      <circle cx="118" cy="26" r="6" fill="#fff3b0" stroke="#1f1f1d" strokeWidth="1.5" />
+      <circle cx="130" cy="26" r="6" fill="#fff3b0" stroke="#1f1f1d" strokeWidth="1.5" />
+      <circle cx="142" cy="26" r="6" fill="#fff3b0" stroke="#1f1f1d" strokeWidth="1.5" />
+      <text x="130" y="40" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1f1f1d">은화 3개!</text>
+    </svg>
+  );
+}`,
+
+      flow: `function FlowSketch() {
+  return (
+    <svg viewBox="0 0 300 220" className="sketch-svg wobbly-line-active">
+      <g className="color-offset">
+        <rect x="15" y="45" width="80" height="95" rx="12" fill="#dff4ff" />
+        <circle cx="55" cy="85" r="18" fill="#fff3b0" />
+        <rect x="145" y="45" width="80" height="95" rx="12" fill="#ffd6df" />
+        <path d="M 171,90 H 199 L 195,109 H 175 Z" fill="#fff" />
+        <rect x="275" y="45" width="80" height="95" rx="12" fill="#fff3b0" />
+        <path d="M 315,75 C 300,75 300,95 315,107 Z" fill="#ffd6df" />
+      </g>
+      <rect x="15" y="45" width="80" height="95" rx="12" className="sketch-line-fill" fill="none" />
+      <circle cx="55" cy="85" r="18" className="sketch-line-fill" fill="none" />
+      <text x="55" y="91" textAnchor="middle" fontSize="18" fontWeight="bold" fill="#1f1f1d">₩</text>
+      <path d="M 55,108 L 55,121 M 50,116 L 55,121 L 60,116" className="sketch-line thin" stroke="#d13d4c" fill="none" />
+      <text x="55" y="132" textAnchor="middle" className="svg-label small">화폐가치 하락</text>
+
+      <path d="M 103,90 Q 120,83 137,90" className="sketch-line thin" fill="none" />
+      <path d="M 131,85 L 138,90 L 132,95" className="sketch-line thin" fill="none" />
+
+      <rect x="145" y="45" width="80" height="95" rx="12" className="sketch-line-fill" fill="none" />
+      <path d="M 171,90 H 199 L 195,109 H 175 Z" className="sketch-line-fill" fill="none" />
+      <path d="M 178,90 Q 185,73 192,90" className="sketch-line thin" fill="none" />
+      <path d="M 185,103 L 185,93 M 180,97 L 185,93 L 190,97" stroke="#d13d4c" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <text x="185" y="132" textAnchor="middle" className="svg-label small">물가 상승</text>
+
+      <path d="M 233,90 Q 250,83 267,90" className="sketch-line thin" fill="none" />
+      <path d="M 261,85 L 268,90 L 262,95" className="sketch-line thin" fill="none" />
+
+      <rect x="275" y="45" width="80" height="95" rx="12" className="sketch-line-fill" fill="none" />
+      <path d="M 315,75 C 300,75 300,95 315,107 C 330,95 330,75 315,75 Z" className="sketch-line-fill" fill="none" />
+      <path d="M 315,87 C 310,90 310,100 315,103 C 320,100 320,90 315,87 Z" fill="#fff3b0" stroke="#1f1f1d" strokeWidth="1.5" />
+      <text x="315" y="132" textAnchor="middle" className="svg-label small">인플레이션</text>
+      <text x="150" y="182" textAnchor="middle" className="svg-label">화폐의 가치가 하락하면, 물가는 풍선처럼 팽창합니다.</text>
+    </svg>
+  );
+}`,
+
+      money: `function MoneySketch() {
+  return (
+    <svg viewBox="0 0 280 220" className="sketch-svg wobbly-line-active">
+      <g className="color-offset">
+        <path d="M 25,90 C 5,70 15,110 30,100 Z" fill="#fff" />
+        <rect x="30" y="80" width="65" height="38" rx="6" fill="#d9f6d3" />
+        <path d="M 250,80 C 270,60 260,100 245,90 Z" fill="#fff" />
+        <rect x="180" y="70" width="65" height="38" rx="6" fill="#d9f6d3" />
+        <rect x="102" y="35" width="68" height="40" rx="6" fill="#d9f6d3" />
+        <circle cx="136" cy="55" r="11" fill="#fff" />
+        <path d="M 82,110 C 60,90 70,135 90,120 Z" fill="#fff" />
+        <path d="M 168,110 C 190,90 180,135 160,120 Z" fill="#fff" />
+        <rect x="90" y="95" width="70" height="42" rx="6" fill="#d9f6d3" />
+        <circle cx="125" cy="116" r="12" fill="#fff" />
+      </g>
+      <g opacity="0.12" transform="translate(10, 5)">
+        <circle cx="130" cy="50" r="30" className="sketch-line" strokeDasharray="10 5" fill="none" />
+        <path d="M 130,10 L 130,90 M 90,50 L 170,50" className="sketch-line" />
+      </g>
+      <g transform="translate(30, 80) rotate(-12)">
+        <path d="M -5,10 C -25,-10 -15,30 0,20 Z" fill="#fff" stroke="#1f1f1d" strokeWidth="2" strokeLinecap="round" />
+        <rect width="65" height="38" rx="6" className="sketch-line-fill" fill="none" />
+        <circle cx="32" cy="19" r="10" fill="none" stroke="#1f1f1d" strokeWidth="1.5" />
+        <text x="32" y="24" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1f1f1d">₩</text>
+      </g>
+      <g transform="translate(185, 70) rotate(15)">
+        <path d="M 70,10 C 90,-10 80,30 65,20 Z" fill="#fff" stroke="#1f1f1d" strokeWidth="2" strokeLinecap="round" />
+        <rect width="65" height="38" rx="6" className="sketch-line-fill" fill="none" />
+        <circle cx="32" cy="19" r="10" fill="none" stroke="#1f1f1d" strokeWidth="1.5" />
+        <text x="32" y="24" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1f1f1d">₩</text>
+      </g>
+      <g transform="translate(102, 35) rotate(4)">
+        <rect width="68" height="40" rx="6" className="sketch-line-fill" fill="none" />
+        <rect x="4" y="4" width="60" height="32" rx="3" fill="none" stroke="#1f1f1d" strokeWidth="1.2" strokeDasharray="3 2" />
+        <circle cx="34" cy="20" r="11" className="sketch-line-fill" fill="none" />
+        <text x="34" y="26" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#1f1f1d">₩</text>
+      </g>
+      <g transform="translate(90, 95) rotate(-5)">
+        <path d="M -8,15 C -30,-5 -20,40 0,25 Z" fill="#fff" stroke="#1f1f1d" strokeWidth="2.5" strokeLinecap="round" />
+        <path d="M 78,15 C 100,-5 90,40 70,25 Z" fill="#fff" stroke="#1f1f1d" strokeWidth="2.5" strokeLinecap="round" />
+        <rect width="70" height="42" rx="6" className="sketch-line-fill" fill="none" />
+        <rect x="4" y="4" width="62" height="34" rx="3" fill="none" stroke="#1f1f1d" strokeWidth="1.5" />
+        <circle cx="35" cy="21" r="12" className="sketch-line-fill" fill="none" />
+        <text x="35" y="27" textAnchor="middle" fontSize="18" fontWeight="black" fill="#1f1f1d">₩</text>
+      </g>
+      <path d="M 60,155 L 63,160 L 68,162 L 63,164 L 60,169 L 57,164 L 52,162 L 57,160 Z" fill="#fff" stroke="#1f1f1d" strokeWidth="1" />
+      <path d="M 210,145 L 212,150 L 217,152 L 212,154 L 210,159 L 208,154 L 203,152 L 208,150 Z" fill="#fff" stroke="#1f1f1d" strokeWidth="1" />
+      <ellipse cx="70" cy="165" rx="14" ry="2.5" fill="rgba(31,31,29,0.06)" />
+      <ellipse cx="130" cy="167" rx="24" ry="3.5" fill="rgba(31,31,29,0.08)" />
+      <ellipse cx="200" cy="165" rx="16" ry="2.5" fill="rgba(31,31,29,0.06)" />
+      <text x="140" y="195" textAnchor="middle" className="svg-label">돈이 너무 흔해지면, 그 실질 가치는 공중 분해됩니다.</text>
+    </svg>
+  );
+}`,
+
+      bankFlow: `function BankFlowSketch() {
+  return (
+    <svg viewBox="0 0 300 220" className="sketch-svg wobbly-line-active">
+      <g className="color-offset">
+        <path d="M 30,95 H 120 L 75,55 Z" fill="#dff4ff" />
+        <rect x="40" y="95" width="12" height="55" fill="#fff" />
+        <rect x="69" y="95" width="12" height="55" fill="#fff" />
+        <rect x="98" y="95" width="12" height="55" fill="#fff" />
+        <rect x="30" y="150" width="90" height="15" fill="#dff4ff" />
+        <path d="M 120,80 H 150 V 95 H 120 Z" fill="#fff3b0" />
+        <circle cx="135" cy="70" r="10" fill="#fff" />
+        <path d="M 210,155 V 110 H 235 L 235,120 H 260 L 260,130 H 280 V 155 Z" fill="#ffd6df" />
+        <path d="M 270,90 C 265,82 280,77 282,87 Z" fill="#fff" />
+      </g>
+      <g transform="translate(15, 30)">
+        <path d="M 15,65 H 105 L 60,25 Z" className="sketch-line-fill" fill="none" />
+        <rect x="25" y="65" width="12" height="55" fill="#fff" className="sketch-line-fill" />
+        <rect x="54" y="65" width="12" height="55" fill="#fff" className="sketch-line-fill" />
+        <rect x="83" y="65" width="12" height="55" fill="#fff" className="sketch-line-fill" />
+        <rect x="15" y="120" width="90" height="15" fill="none" className="sketch-line-fill" />
+        <text x="60" y="52" textAnchor="middle" fontSize="12" fontWeight="black" fill="#1f1f1d" letterSpacing="1">CENTRAL</text>
+        <text x="60" y="152" textAnchor="middle" className="svg-label">중앙은행</text>
+      </g>
+      <g transform="translate(125, 75)">
+        <path d="M -5,5 H 25 V 20 H -5 Z" fill="none" className="sketch-line-fill" />
+        <circle cx="10" cy="-5" r="10" fill="#fff" className="sketch-line-fill" />
+        <path d="M 10,-15 V 5 M 0,-5 H 20" stroke="#1f1f1d" strokeWidth="2" />
+        <path d="M 20,15 Q 40,15 50,30" className="sketch-line" fill="none" />
+      </g>
+      <path d="M 125,95 Q 165,75 205,100" className="sketch-line thin" strokeDasharray="5 5" fill="none" />
+      <circle cx="165" cy="83" r="8" fill="#fff3b0" className="sketch-line-fill" />
+      <text x="165" y="87" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1f1f1d">₩</text>
+
+      <g transform="translate(200, 75)">
+        <ellipse cx="45" cy="85" rx="35" ry="5" fill="rgba(31,31,29,0.08)" />
+        <path d="M 10,80 V 35 H 35 L 35,45 H 60 L 60,55 H 80 V 80 Z" className="sketch-line-fill" fill="none" />
+        <rect x="20" y="55" width="8" height="12" fill="#fff" className="sketch-line" />
+        <rect x="42" y="60" width="8" height="12" fill="#fff" className="sketch-line" />
+        <rect x="65" y="22" width="10" height="33" fill="#1f1f1d" />
+        <path d="M 70,15 C 65,7 80,2 82,12 C 88,9 92,17 85,19 Z" fill="#fff" className="sketch-line-fill" />
+        <text x="45" y="105" textAnchor="middle" className="svg-label">기업 (공장)</text>
+      </g>
+    </svg>
+  );
+}`,
+
+      supplyDemand: `function SupplyDemandSketch() {
+  return (
+    <svg viewBox="0 0 300 220" className="sketch-svg wobbly-line-active">
+      <path d="M 60,135 Q 160,133 260,135" stroke="rgba(31,31,29,0.05)" strokeWidth="1.8" strokeDasharray="4 4" fill="none" />
+      <path d="M 60,95 Q 160,97 260,95" stroke="rgba(31,31,29,0.05)" strokeWidth="1.8" strokeDasharray="4 4" fill="none" />
+      <path d="M 120,35 Q 123,105 120,175" stroke="rgba(31,31,29,0.05)" strokeWidth="1.8" strokeDasharray="4 4" fill="none" />
+      <path d="M 180,35 Q 183,105 180,175" stroke="rgba(31,31,29,0.05)" strokeWidth="1.8" strokeDasharray="4 4" fill="none" />
+
+      <path d="M 60,175 V 35 M 60,175 H 260" className="sketch-line" fill="none" />
+      <path d="M 55,42 L 60,35 L 65,42 M 253,170 L 260,175 L 253,180" className="sketch-line thin" fill="none" />
+
+      <text x="35" y="45" className="svg-label">가격 (P)</text>
+      <text x="250" y="196" className="svg-label">거래량 (Q)</text>
+
+      <path d="M 80,145 Q 140,115 220,55" className="sketch-line supply" fill="none" />
+      <text x="230" y="55" className="svg-label small" fill="#d13d4c">공급 (S)</text>
+
+      <path d="M 80,55 Q 140,115 220,145" className="sketch-line demand" fill="none" />
+      <text x="230" y="152" className="svg-label small" fill="#218a4b">수요 (D1)</text>
+
+      <path d="M 120,55 Q 180,115 260,145" className="sketch-line demand shifted" fill="none" strokeDasharray="6 4" />
+      <text x="260" y="135" className="svg-label small" fill="#218a4b" opacity="0.75">수요 증가 (D2)</text>
+
+      <circle cx="140" cy="104" r="6" fill="#1f1f1d" />
+      <g transform="translate(125, 80)">
+        <rect width="28" height="16" rx="4" fill="#fff" stroke="#1f1f1d" strokeWidth="1.2" />
+        <text x="14" y="12" textAnchor="middle" fontSize="10" fontWeight="bold">기존</text>
+      </g>
+
+      <circle cx="178" cy="90" r="7" fill="#d13d4c" />
+      <g transform="translate(178, 62)">
+        <path d="M 0,10 L 10,0 H 42 V 16 H 5 C 0,16 0,12 0,10" fill="#fff" stroke="#d13d4c" strokeWidth="1.2" />
+        <text x="24" y="12" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#d13d4c">가격 상승! ↑</text>
+      </g>
+
+      <g transform="translate(85, 30)">
+        <path d="M 0,25 C -5,22 -8,15 -2,12 C 4,9 12,20 15,22 C 18,18 22,25 18,30" fill="#fff" className="sketch-line-fill" />
+        <text x="-18" y="10" fontSize="9" fontWeight="bold" fill="#5f615d" transform="rotate(-15)">소비 급증! ➔</text>
+      </g>
+    </svg>
+  );
+}`,
+
+      news: `function NewsSketch() {
+  return (
+    <svg viewBox="0 0 280 220" className="sketch-svg wobbly-line-active">
+      <g className="color-offset">
+        <rect x="60" y="50" width="130" height="110" rx="10" fill="#f6f6f6" />
+        <rect x="75" y="40" width="135" height="115" rx="10" fill="#fff" />
+        <rect x="85" y="50" width="115" height="20" fill="#fff3b0" />
+        <rect x="90" y="80" width="32" height="42" rx="4" fill="#dff4ff" />
+        <circle cx="196" cy="121" r="18" fill="rgba(223, 244, 255, 0.45)" />
+        <rect x="210" y="135" width="6" height="25" rx="2" fill="#fff3b0" />
+      </g>
+      <ellipse cx="140" cy="185" rx="90" ry="8" fill="rgba(31,31,29,0.06)" />
+
+      <g transform="translate(60, 50) rotate(-6)">
+        <rect width="130" height="110" rx="10" className="sketch-line-fill" fill="none" />
+        <path d="M 15,20 H 115 M 15,35 H 100 M 15,50 H 110" className="sketch-line thin" opacity="0.3" fill="none" />
+      </g>
+
+      <g transform="translate(75, 40) rotate(3)">
+        <rect width="135" height="115" rx="10" className="sketch-line-fill" fill="none" />
+        <rect x="10" y="10" width="115" height="20" className="sketch-line-fill" fill="none" />
+        <text x="67" y="24" textAnchor="middle" fontSize="12" fontWeight="black" fill="#1f1f1d" letterSpacing="2">DAILY NEWS</text>
+
+        <g transform="translate(15, 40)">
+          <rect width="32" height="42" rx="4" className="sketch-line-fill" fill="none" />
+          <ellipse cx="16" cy="6" rx="10" ry="3" fill="#fff" stroke="#1f1f1d" strokeWidth="1.5" />
+          <path d="M 6,6 V 36 C 6,39 26,39 26,36 V 6" fill="none" stroke="#1f1f1d" strokeWidth="1.5" />
+          <ellipse cx="16" cy="36" rx="10" ry="3" fill="none" stroke="#1f1f1d" strokeWidth="1.5" />
+          <line x1="6" y1="20" x2="26" y2="20" stroke="#1f1f1d" strokeWidth="1.5" />
+        </g>
+        <path d="M 58,45 H 120 M 58,58 H 115 M 58,71 H 122 M 15,95 H 120 M 15,105 H 95" className="sketch-line thin" fill="none" />
+        <path d="M 115,20 L 117,23 L 121,24 L 118,27 L 119,31 L 115,29 L 111,31 L 112,27 L 109,24 L 113,23 Z" fill="#d13d4c" />
+      </g>
+
+      <g transform="translate(170, 95) rotate(-25)">
+        <rect x="22" y="45" width="8" height="35" rx="3" className="sketch-line-fill" fill="none" />
+        <circle cx="26" cy="26" r="24" fill="rgba(223, 244, 255, 0.45)" className="sketch-line-fill" />
+        <path d="M 14,14 L 18,18 M 16,12 L 20,16" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" />
+      </g>
+    </svg>
+  );
+}`,
+
+      people: `function PeopleSketch() {
+  return (
+    <svg viewBox="0 0 280 220" className="sketch-svg wobbly-line-active">
+      <g className="color-offset">
+        <rect x="35" y="45" width="76" height="110" rx="10" fill="#fff" />
+        <circle cx="73" cy="83" r="16" fill="#fff" />
+        <path d="M 57,99 H 89 V 107 Z" fill="#d9f6d3" />
+        <path d="M 93,60 L 95,63 L 99,64 L 95,65 L 93,68 Z" fill="#f7d65b" />
+        <rect x="165" y="45" width="76" height="110" rx="10" fill="#fff" />
+        <circle cx="203" cy="83" r="16" fill="#fff" />
+        <path d="M 189,29 H 219 Q 204,16 189,29" fill="#fff3b0" />
+        <path d="M 187,99 H 219 V 107 Z" fill="#ffd6df" />
+        <rect x="98" y="30" width="84" height="120" rx="12" fill="#fff3b0" />
+        <circle cx="140" cy="78" r="22" fill="#fff" />
+        <rect x="113" y="115" width="54" height="18" rx="4" fill="#dff4ff" />
+      </g>
+      <g transform="translate(35, 45) rotate(-15)">
+        <rect width="76" height="110" rx="10" className="sketch-line-fill" fill="none" />
+        <rect x="5" y="5" width="66" height="100" rx="7" fill="none" stroke="#218a4b" strokeWidth="1.8" strokeDasharray="3 2" />
+        <circle cx="38" cy="38" r="16" className="sketch-line-fill" fill="none" />
+        <circle cx="33" cy="35" r="1.5" fill="#1f1f1d" />
+        <circle cx="43" cy="35" r="1.5" fill="#1f1f1d" />
+        <path d="M 32,42 Q 38,48 44,42" fill="none" stroke="#1f1f1d" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M 22,54 H 54 V 62 Z" className="sketch-line thin" fill="none" />
+        <text x="38" y="76" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1f1f1d">채무자</text>
+        <path d="M 58,15 L 60,18 L 64,19 L 60,20 L 58,23 L 56,20 L 52,19 L 56,18 Z" fill="#f7d65b" />
+      </g>
+
+      <g transform="translate(165, 45) rotate(15)">
+        <rect width="76" height="110" rx="10" className="sketch-line-fill" fill="none" />
+        <rect x="5" y="5" width="66" height="100" rx="7" fill="none" stroke="#d13d4c" strokeWidth="1.8" strokeDasharray="3 2" />
+        <circle cx="38" cy="38" r="16" className="sketch-line-fill" fill="none" />
+        <circle cx="33" cy="35" r="1.5" fill="#1f1f1d" />
+        <circle cx="43" cy="35" r="1.5" fill="#1f1f1d" />
+        <path d="M 32,44 Q 38,38 44,44" fill="none" stroke="#1f1f1d" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M 31,38 L 29,43" stroke="#dff4ff" strokeWidth="2" strokeLinecap="round" fill="none" />
+        <path d="M 23,24 H 53 Q 38,11 23,24" fill="#fff3b0" stroke="#1f1f1d" strokeWidth="1.8" />
+        <path d="M 22,54 H 54 V 62 Z" className="sketch-line thin" fill="none" />
+        <text x="38" y="76" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1f1f1d">월급쟁이</text>
+      </g>
+
+      <g transform="translate(98, 30) rotate(-2)">
+        <rect width="84" height="120" rx="12" className="sketch-line-fill" fill="none" />
+        <rect x="5" y="5" width="74" height="110" rx="8" fill="none" stroke="#1f1f1d" strokeWidth="2.5" />
+        <circle cx="42" cy="48" r="22" className="sketch-line-fill" fill="none" />
+        <text x="42" y="58" textAnchor="middle" fontSize="32" fontWeight="black" fill="#1f1f1d">?</text>
+        <rect x="15" y="85" width="54" height="18" rx="4" className="sketch-line-fill" fill="none" />
+        <text x="42" y="97" textAnchor="middle" fontSize="11" fontWeight="black" fill="#1f1f1d">누가 웃을까</text>
+      </g>
+      <text x="140" y="195" textAnchor="middle" className="svg-label">화폐가치 하락은 누군가의 지갑을 털어 다른 이에게 줍니다.</text>
+    </svg>
+  );
+}`,
+
+      centralBank: `function CentralBankSketch() {
+  return (
+    <svg viewBox="0 0 300 220" className="sketch-svg wobbly-line-active">
+      <g className="color-offset">
+        <rect x="30" y="30" width="240" height="140" rx="14" fill="#f6f6f6" />
+        <rect x="45" y="45" width="65" height="45" rx="6" fill="#1f1f1d" />
+        <rect x="122" y="45" width="55" height="45" rx="6" fill="#1f1f1d" />
+        <rect x="192" y="45" width="60" height="45" rx="6" fill="#fff3b0" />
+        <rect x="110" y="115" width="80" height="35" rx="6" fill="#fff3b0" />
+        <circle cx="150" cy="94" r="12" fill="#d13d4c" />
+      </g>
+      <rect x="30" y="30" width="240" height="140" rx="14" className="sketch-line-fill" fill="none" />
+
+      <g transform="translate(45, 45)">
+        <rect width="65" height="45" rx="6" fill="#1f1f1d" />
+        <path d="M 8,36 L 22,26 L 36,32 L 56,10" fill="none" stroke="#d13d4c" strokeWidth="2.8" strokeLinecap="round" />
+        <circle cx="56" cy="10" r="3.5" fill="#fff" />
+        <text x="32" y="40" textAnchor="middle" fontSize="8" fill="#fff" opacity="0.8">MARKET P</text>
+      </g>
+
+      <g transform="translate(122, 45)">
+        <rect width="55" height="45" rx="6" fill="#1f1f1d" />
+        <path d="M 8,14 L 20,28 L 35,22 L 48,38" fill="none" stroke="#dff4ff" strokeWidth="2.8" strokeLinecap="round" />
+        <circle cx="48" cy="38" r="3.5" fill="#fff" />
+        <text x="27" y="40" textAnchor="middle" fontSize="8" fill="#fff" opacity="0.8">JOBS</text>
+      </g>
+
+      <g transform="translate(192, 45)">
+        <rect width="60" height="45" rx="6" className="sketch-line-fill" fill="none" />
+        <path d="M 30,12 L 16,34 H 44 Z" fill="#d13d4c" stroke="#1f1f1d" strokeWidth="1.8" />
+        <text x="30" y="30" textAnchor="middle" fontSize="12" fontWeight="black" fill="#fff">!</text>
+      </g>
+
+      <g transform="translate(110, 110)">
+        <rect x="0" y="5" width="80" height="35" rx="6" className="sketch-line-fill" fill="none" />
+        <path d="M 12,22 H 68" className="sketch-line" strokeWidth="6" fill="none" />
+
+        <g className="wiggle">
+          <path d="M 40,22 L 40,-12" className="sketch-line" strokeWidth="7" fill="none" />
+          <circle cx="40" cy="-16" r="12" fill="#d13d4c" className="sketch-line-fill" />
+          <circle cx="36" cy="-19" r="3.2" fill="#fff" />
+        </g>
+        <text x="-15" y="27" textAnchor="end" fontSize="10" fontWeight="bold" fill="#218a4b">◀ 금리 인하</text>
+        <text x="95" y="27" textAnchor="start" fontSize="10" fontWeight="bold" fill="#d13d4c">금리 인상 ▶</text>
+      </g>
+      <text x="150" y="195" textAnchor="middle" className="svg-label">금리 레버를 밀어 시장 통화량을 옥죄거나 풀 수 있습니다.</text>
+    </svg>
+  );
+}`,
+
+      dilemma: `function DilemmaSketch() {
+  return (
+    <svg viewBox="0 0 280 220" className="sketch-svg wobbly-line-active">
+      <g className="color-offset">
+        <path d="M 125,175 H 155 L 150,165 H 130 Z" fill="#f2d392" />
+        <circle cx="140" cy="65" r="8" fill="#fff3b0" />
+        <path d="M 50,65 H 230" stroke="#1f1f1d" strokeWidth="4.5" />
+        <path d="M 30,110 C 30,125 80,125 80,110 Z" fill="#ffd6df" />
+        <path d="M 55,78 C 40,78 40,98 55,110 Z" fill="#ffd6df" />
+        <circle cx="200" cy="104" r="11" fill="#fff" />
+        <path d="M 190,115 H 210 V 125 H 190 Z" fill="#dff4ff" />
+        <path d="M 175,110 C 175,125 225,125 225,110 Z" fill="#dff4ff" />
+      </g>
+      <ellipse cx="140" cy="180" rx="45" ry="8" fill="rgba(31,31,29,0.08)" />
+      <path d="M 140,175 V 65" className="sketch-line" strokeWidth="6" fill="none" />
+      <path d="M 125,175 H 155 L 150,165 H 130 Z" className="sketch-line-fill" fill="none" />
+      <circle cx="140" cy="65" r="8" className="sketch-line-fill" fill="none" />
+
+      <g transform="translate(140, 65) rotate(-5)">
+        <path d="M -90,0 H 90" className="sketch-line" strokeWidth="5.5" fill="none" />
+        <path d="M -85,0 L -85,45 M -90,45 H -80" className="sketch-line thin" fill="none" />
+        <path d="M 85,0 L 85,45 M 80,45 H 90" className="sketch-line thin" fill="none" />
+
+        <g transform="translate(-85, 45)">
+          <path d="M -25,0 C -25,15 25,15 25,0 Z" className="sketch-line-fill" fill="none" />
+          <g transform="translate(0, -32)" className="wiggle">
+            <path d="M 0,-15 C -15,-15 -15,10 0,18 C 15,10 15,-15 0,-15 Z" className="sketch-line-fill" fill="none" />
+            <path d="M -12,0 Q -18,-15 -8,-10 Q 0,-25 8,-8 Q 18,-18 12,2" fill="none" stroke="#d13d4c" strokeWidth="2.2" strokeLinecap="round" />
+            <circle cx="-4" cy="-2" r="1.5" fill="#1f1f1d" />
+            <circle cx="4" cy="-2" r="1.5" fill="#1f1f1d" />
+            <path d="M -4,5 Q 0,1 4,5" fill="none" stroke="#1f1f1d" strokeWidth="1.8" strokeLinecap="round" />
+            <text x="0" y="-22" textAnchor="middle" fontSize="10" fontWeight="black" fill="#d13d4c">물가 안정</text>
+          </g>
+        </g>
+
+        <g transform="translate(85, 45)">
+          <path d="M -25,0 C -25,15 25,15 25,0 Z" className="sketch-line-fill" fill="none" />
+          <g transform="translate(0, -32)" className="wiggle" style={{ animationDelay: '150ms' }}>
+            <circle cx="0" cy="-6" r="11" className="sketch-line-fill" fill="none" />
+            <circle cx="-3" cy="-8" r="1" fill="#1f1f1d" />
+            <circle cx="3" cy="-8" r="1" fill="#1f1f1d" />
+            <path d="M -3,-3 Q 0,-6 3,-3" fill="none" stroke="#1f1f1d" strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M -8,-6 L -10,-2" stroke="#dff4ff" strokeWidth="2" strokeLinecap="round" fill="none" />
+            <path d="M -10,5 H 10 V 15 H -10 Z" className="sketch-line-fill" fill="none" />
+            <text x="0" y="-22" textAnchor="middle" fontSize="10" fontWeight="black" fill="#218a4b">고용 안정</text>
+          </g>
+        </g>
+      </g>
+      <text x="140" y="200" textAnchor="middle" className="svg-label">시소의 두 추처럼, 하나를 억누르면 다른 쪽이 치솟는 딜레마입니다.</text>
+    </svg>
+  );
+}`
+    };
+
+    // 클립보드 복사 함수
+    function copyCode(key) {
+      const codeText = codes[key];
+      if (!codeText) return;
+
+      navigator.clipboard.writeText(codeText).then(() => {
+        showToast();
+      }).catch(err => {
+        console.error("복사 실패:", err);
+      });
+    }
+
+    // 토스트 팝업 띄우기
+    function showToast() {
+      const toast = document.getElementById("toast");
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2000);
+    }
+  </script>
+
+</body>
+</html>

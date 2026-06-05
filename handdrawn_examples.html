@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✍️ 아날로그 손그림(Hand-drawn) SVG 기술 데모</title>
+  <style>
+    @font-face {
+      font-family: "sd-misaeng";
+      src: url("/fonts/sdmisaeng.woff2") format("woff2");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --color-paper: #fffdf7;
+      --color-ink: #1f1f1d;
+      --color-ink-soft: #5f615d;
+      --color-yellow-soft: #fff3b0;
+      --color-blue-soft: #dff4ff;
+      --color-pink-soft: #ffd6df;
+      --color-green-soft: #d9f6d3;
+    }
+
+    body {
+      margin: 0;
+      padding: 3rem 1.5rem;
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+      font-family: "sd-misaeng", "Comic Sans MS", system-ui, sans-serif;
+      font-size: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      margin: 0 0 0.5rem;
+      font-weight: 900;
+    }
+
+    p.subtitle {
+      font-size: 1.8rem;
+      color: var(--color-ink-soft);
+      margin: 0;
+    }
+
+    .info-card {
+      border: 3px solid var(--color-ink);
+      border-radius: 18px 14px 20px 13px;
+      background: #fffefa;
+      box-shadow: 6px 6px 0 var(--color-ink);
+      padding: 1.5rem 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      margin-top: 0;
+      border-bottom: 2px dashed rgba(31, 31, 29, 0.2);
+      padding-bottom: 0.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .demo-card {
+      border: 3px solid var(--color-ink);
+      border-radius: 15px 12px 16px 14px;
+      background: #fffefa;
+      box-shadow: 5px 5px 0 var(--color-ink);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .demo-card h3 {
+      font-size: 1.8rem;
+      margin: 0 0 1rem;
+      font-weight: 900;
+    }
+
+    .canvas {
+      width: 100%;
+      height: 240px;
+      border: 2px dashed rgba(31, 31, 29, 0.15);
+      border-radius: 12px;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .tag {
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      background: var(--color-yellow-soft);
+      border: 2px solid var(--color-ink);
+      border-radius: 999px;
+      padding: 0.2rem 0.6rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .code-explanation {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      color: var(--color-ink-soft);
+      text-align: left;
+      width: 100%;
+    }
+
+    /* SVG 렌더링 세팅 */
+    .sketch-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .sketch-line {
+      fill: none;
+      stroke: var(--color-ink);
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sketch-line.thin {
+      stroke-width: 3;
+    }
+
+    .sketch-line-fill {
+      stroke: var(--color-ink);
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* -------------------------------------------------------------
+       핵심 애니메이션 & 필터 스타일링
+    ------------------------------------------------------------- */
+    
+    /* 1. 니키 케이스 스타일의 생동감 넘치는 씰룩씰룩(Wiggle) 필터 애니메이션 */
+    .wobbly-line-active {
+      animation: svg-wiggle-effect 0.3s steps(2) infinite;
+    }
+
+    @keyframes svg-wiggle-effect {
+      0% {
+        filter: url(#rough-edge-1);
+      }
+      50% {
+        filter: url(#rough-edge-2);
+      }
+    }
+
+    /* 2. 채색이 약간 삐져나온 아날로그 마커 효과용 지터 오프셋 */
+    .color-offset {
+      transform: translate(2px, -3px);
+      opacity: 0.85;
+    }
+
+    /* 3. 돋보기/포커스 펄스 효과 */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .pulse {
+      transform-origin: center;
+      animation: pulse 2s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 니키 케이스의 "손으로 슥슥 그린 듯한" 미세 흔들림 효과용 SVG 필터 정의 -->
+  <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
+    <defs>
+      <!-- 프레임 1: 노이즈 분산 1 -->
+      <filter id="rough-edge-1" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="1" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+      
+      <!-- 프레임 2: 노이즈 분산 2 (시드가 달라 미세하게 선이 출렁임) -->
+      <filter id="rough-edge-2" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="8" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+
+      <!-- 종이 질감 연출용 백그라운드 필터 -->
+      <filter id="paper-texture">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" result="noise" />
+        <feDiffuseLighting in="noise" lighting-color="#fff" surfaceScale="2">
+          <feDistantLight azimuth="45" elevation="60" />
+        </feDiffuseLighting>
+        <feBlend mode="multiply" in="SourceGraphic" in2="noise" />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="container">
+    <header>
+      <h1>✍️ 아날로그 손그림(Hand-drawn) SVG 기술 데모</h1>
+      <p class="subtitle">니키 케이스(Nicky Case)의 흔들리는 핸드드론 벡터 라인 재현하기</p>
+    </header>
+
+    <div class="info-card">
+      <h2 class="section-title">💡 어떻게 컴퓨터 선을 "손그림"처럼 만드나요?</h2>
+      <p>
+        니키 케이스의 <strong>신뢰의 진화(The Evolution of Trust)</strong>에 쓰인 그래픽들은 일러스트레이터로 그린 매끄러운 선이 아니라, 
+        실제 연필이나 사인펜으로 슥슥 그은 듯 선이 미세하게 떨리고 구부러져 있으며, 채색이 외곽선에서 조금씩 삐져나와 따뜻한 느낌을 줍니다.
+      </p>
+      <p>
+        이 데모 페이지에서는 <strong>순수 SVG와 CSS</strong>만을 이용하여 이를 완벽하게 재현하는 <strong>3가지 비밀 기술</strong>을 직접 눈으로 비교할 수 있게 제작했습니다:
+      </p>
+      <ul>
+        <li><strong>비밀 1: SVG feTurbulence 노이즈 필터</strong> - 완벽하게 뻗은 벡터 외곽선을 찌글찌글하게 뒤틀어 잉크가 밴 펠트펜 질감으로 바꿉니다.</li>
+        <li><strong>비밀 2: 프레임 wiggling (출렁임 효과)</strong> - 미세하게 다른 노이즈 시드를 가진 필터 2개를 교차 반복하여, 캐릭터가 살아 숨 쉬듯 외곽선이 바르르 wiggling하는 만화적 효과를 줍니다.</li>
+        <li><strong>비밀 3: 오프셋 채색 (Offset Fill)</strong> - 면 색상 칠하기를 외곽선 좌표에서 약간 어긋나게(translate) 처리하여, 초등학생이 색연필로 정겹게 삐쳐 칠한 손그림 느낌을 줍니다.</li>
+      </ul>
+    </div>
+
+    <!-- 비교 세션 1: 일반 기계 선 vs 흔들리는 아날로그 손그림 선 -->
+    <h2 class="section-title">1. 선의 질감 비교 데모 (The Scale)</h2>
+    <div class="grid">
+      <!-- 기존 기계식 SVG -->
+      <div class="demo-card">
+        <h3>기존 정형화된 컴퓨터 SVG</h3>
+        <div class="canvas">
+          <span class="tag">Mechanical</span>
+          <!-- 평범하고 딱딱한 드로잉 -->
+          <svg viewBox="0 0 200 180" class="sketch-svg">
+            {/* 받침대 */}
+            <path d="M 60,140 H 140 M 100,140 V 60" stroke="#1f1f1d" stroke-width="4" stroke-linecap="round" fill="none" />
+            <path d="M 85,140 L 100,125 L 115,140 Z" fill="#fff3b0" stroke="#1f1f1d" stroke-width="4" />
+            {/* 저울 평형봉 */}
+            <path d="M 40,60 H 160" stroke="#1f1f1d" stroke-width="4" stroke-linecap="round" />
+            {/* 왼쪽 트레이 */}
+            <path d="M 45,60 V 95 M 30,95 H 60 C 30,115 60,115 30,95" stroke="#1f1f1d" stroke-width="3" fill="#ffd6df" />
+            <circle cx="45" cy="85" r="8" fill="#d13d4c" />
+            {/* 오른쪽 트레이 */}
+            <path d="M 155,60 V 95 M 140,95 H 170" stroke="#1f1f1d" stroke-width="3" fill="#dff4ff" />
+            <circle cx="155" cy="85" r="8" fill="#218a4b" />
+          </svg>
+        </div>
+        <div class="code-explanation">
+          수학적으로 정확하게 떨어져 다소 경직되고 영혼이 없어 보이는 정형화된 차트형 이미지입니다.
+        </div>
+      </div>
+
+      <!-- 리디자인 핸드드론 SVG (출렁이는 노이즈 필터 & 오프셋 채색 탑재) -->
+      <div class="demo-card">
+        <h3>출렁이는 핸드드론(Hand-drawn) SVG</h3>
+        <div class="canvas">
+          <span class="tag" style="background: var(--color-blue-soft);">Wiggling & Offset</span>
+          <!-- 생동감 넘치는 손그림 드로잉 -->
+          <svg viewBox="0 0 200 180" class="sketch-svg wobbly-line-active">
+            {/* 1) 종이 크레용 감성의 미세하게 어긋난 색상 채색 레이어 (Offset Color Fill) */}
+            <g class="color-offset">
+              {/* 받침대 채색 */}
+              <path d="M 86,140 L 100,126 L 114,140 Z" fill="#fff3b0" opacity="0.9" />
+              {/* 왼쪽 둥글 납작 트레이 채색 */}
+              <path d="M 30,95 C 28,110 62,110 60,95 Z" fill="#ffd6df" opacity="0.9" />
+              {/* 오른쪽 납작 트레이 채색 */}
+              <path d="M 140,95 C 138,110 172,110 170,95 Z" fill="#dff4ff" opacity="0.9" />
+            </g>
+
+            {/* 2) 구불구불 사람 손길이 느껴지게 미세 곡선을 주어 그린 외곽선 레이어 (Hand-drawn Ink lines) */}
+            {/* 지지대 기둥 (자대고 그린게 아닌 미세 커브) */}
+            <path d="M 60,141 Q 100,139 140,141 M 100,140 Q 98,90 100,60" class="sketch-line" />
+            <path d="M 85,140 L 100,125 L 115,140 Z" fill="none" class="sketch-line" />
+            
+            {/* 저울 평형봉 (미세 굴곡) */}
+            <path d="M 38,61 Q 100,58 162,61" class="sketch-line" />
+            
+            {/* 왼쪽 매달린 트레이 (체인 줄이 자연스럽게 늘어짐 + 겹치는 선 접합부) */}
+            <path d="M 45,60 Q 43,78 45,95" class="sketch-line thin" />
+            <path d="M 28,95 C 25,115 65,115 62,95 Z" fill="none" class="sketch-line" />
+            {/* 붉은 구형 추 */}
+            <circle cx="45" cy="83" r="9" fill="#ffd6df" stroke="#1f1f1d" stroke-width="3.5" />
+            <text x="45" y="87" text-anchor="middle" font-size="11" font-weight="bold" fill="#d13d4c">물가</text>
+
+            {/* 오른쪽 트레이 */}
+            <path d="M 155,60 Q 157,78 155,95" class="sketch-line thin" />
+            <path d="M 138,95 C 135,115 175,115 172,95 Z" fill="none" class="sketch-line" />
+            {/* 초록 구형 추 */}
+            <circle cx="155" cy="83" r="9" fill="#d9f6d3" stroke="#1f1f1d" stroke-width="3.5" />
+            <text x="155" y="87" text-anchor="middle" font-size="11" font-weight="bold" fill="#218a4b">고용</text>
+          </svg>
+        </div>
+        <div class="code-explanation">
+          선들이 바르르 떨리며 춤추는 듯한 애니메이션과, 일부러 약간 어긋나게 칠한 수채화식 오프셋 채색이 가미되어 손맛을 극대화합니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- 비교 세션 2: 캐릭터 표현 극대화 데모 (The News & Magnifying Glass) -->
+    <h2 class="section-title">2. 캐릭터/소품 손그림 데모 (News Analysis)</h2>
+    <div class="grid">
+      <!-- 기존 기계식 SVG -->
+      <div class="demo-card">
+        <h3>기존 정형화된 컴퓨터 SVG</h3>
+        <div class="canvas">
+          <span class="tag">Mechanical</span>
+          <svg viewBox="0 0 200 180" class="sketch-svg">
+            <rect x="50" y="40" width="100" height="90" rx="6" fill="#fff" stroke="#1f1f1d" stroke-width="4" />
+            <line x1="60" y1="55" x2="140" y2="55" stroke="#1f1f1d" stroke-width="3" />
+            <line x1="60" y1="75" x2="120" y2="75" stroke="#1f1f1d" stroke-width="3" />
+            <line x1="60" y1="95" x2="135" y2="95" stroke="#1f1f1d" stroke-width="3" />
+            <line x1="60" y1="112" x2="100" y2="112" stroke="#1f1f1d" stroke-width="3" />
+          </svg>
+        </div>
+        <div class="code-explanation">
+          수학적 선들로만 이루어져 있어 교과서 구석에 있는 흑백 픽토그램 아이콘 같은 느낌을 줍니다.
+        </div>
+      </div>
+
+      <!-- 리디자인 핸드드론 SVG (출렁이는 노이즈 필터 & 오프셋 채색 탑재) -->
+      <div class="demo-card">
+        <h3>출렁이는 핸드드론(Hand-drawn) SVG</h3>
+        <div class="canvas">
+          <span class="tag" style="background: var(--color-blue-soft);">Wiggling & Offset</span>
+          <svg viewBox="0 0 200 180" class="sketch-svg wobbly-line-active">
+            {/* 1) 삐져나온 수채화풍 채색 오프셋 */}
+            <g class="color-offset">
+              {/* 신문 배경 */}
+              <rect x="40" y="30" width="105" height="95" rx="8" fill="#fff" opacity="0.9" />
+              {/* 신문 헤더 형광펜 악센트 */}
+              <rect x="48" y="38" width="89" height="15" fill="#fff3b0" opacity="0.9" />
+              {/* 돋보기 안쪽 푸른색 유리 */}
+              <circle cx="130" cy="100" r="18" fill="#dff4ff" opacity="0.75" />
+              {/* 돋보기 나무 손잡이 */}
+              <rect x="144" y="114" width="6" height="25" rx="2" fill="#fff3b0" />
+            </g>
+
+            {/* 2) 아기자기하게 슥슥 그린 손그림 외곽선 */}
+            {/* 신문 판때기 */}
+            <rect x="40" y="30" width="105" height="95" rx="8" class="sketch-line" fill="none" />
+            {/* 손글씨 헤더 흉내 */}
+            <rect x="48" y="38" width="89" height="15" class="sketch-line thin" fill="none" />
+            <text x="92" y="50" text-anchor="middle" font-size="10" font-weight="black" fill="#1f1f1d">DAILY NEWS</text>
+
+            {/* 본문 텍스트 느낌의 물결선 */}
+            <path d="M 48,68 Q 80,66 112,68 M 48,82 Q 70,84 92,82 M 48,96 Q 75,94 102,96" class="sketch-line thin" fill="none" />
+            
+            {/* 돋보기 (맥락에 맞는 훌륭한 시각 효과 소품) */}
+            <g class="pulse">
+              <rect x="144" y="114" width="6" height="25" rx="2" class="sketch-line thin" fill="none" />
+              <circle cx="130" cy="100" r="18" class="sketch-line thin" fill="none" />
+              {/* 빛 반사선 */}
+              <path d="M 120,92 Q 124,96 122,92" class="sketch-line thin" stroke-linecap="round" />
+            </g>
+          </svg>
+        </div>
+        <div class="code-explanation">
+          바르르 떠는 필터 덕분에 돋보기가 신문을 실제로 관찰하며 숨 쉬는 듯한 활력과 동적인 즐거움을 불어넣어 줍니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- 필터 구현 원리 코드 박스 제공 -->
+    <div class="info-card" style="margin-top: 2rem;">
+      <h2 class="section-title">🛠️ 우리 프로젝트에 적용하는 방법</h2>
+      <p>
+        이 미세 흔들림(Wiggle) 필터는 별도의 무거운 외부 그래픽 소스 없이, <strong>기존 React 코드 안에 매우 간단히 심을 수 있습니다.</strong>
+      </p>
+      <p>
+        <strong>1단계:</strong> `src/App.tsx`의 적절한 빈 곳(예: `App` 컴포넌트 내부 최상단)에 아래의 <strong>`<defs>` 필터 마크업</strong>을 단 한 번만 복사해서 붙여넣습니다:
+      </p>
+      <pre style="background: #1f1f1d; color: #d9f6d3; padding: 1.25rem; border-radius: 8px; overflow-x: auto; font-size: 1.1rem; font-family: monospace;">
+&lt;svg style={{ position: 'absolute', width: 0, height: 0 }} aria-hidden="true"&gt;
+  &lt;defs&gt;
+    &lt;filter id="rough-edge-1" x="-10%" y="-10%" width="120%" height="120%"&gt;
+      &lt;feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="1" result="noise" /&gt;
+      &lt;feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5" xChannelSelector="R" yChannelSelector="G" /&gt;
+    &lt;/filter&gt;
+    &lt;filter id="rough-edge-2" x="-10%" y="-10%" width="120%" height="120%"&gt;
+      &lt;feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="8" result="noise" /&gt;
+      &lt;feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5" xChannelSelector="R" yChannelSelector="G" /&gt;
+    &lt;/filter&gt;
+  &lt;/defs&gt;
+&lt;/svg&gt;</pre>
+      
+      <p>
+        <strong>2단계:</strong> `src/index.css` 최하단에 선이 wiggling하는 <strong>CSS 애니메이션 클래스</strong>를 붙여넣습니다:
+      </p>
+      <pre style="background: #1f1f1d; color: #d9f6d3; padding: 1.25rem; border-radius: 8px; overflow-x: auto; font-size: 1.1rem; font-family: monospace;">
+.wobbly-hand-drawn {
+  animation: svg-wiggle-effect 0.3s steps(2) infinite;
+}
+
+@keyframes svg-wiggle-effect {
+  0% { filter: url(#rough-edge-1); }
+  50% { filter: url(#rough-edge-2); }
+}</pre>
+
+      <p>
+        <strong>3단계:</strong> wiggling이 필요한 SVG 태그들에 **`wobbly-hand-drawn`** 클래스를 부여하면, 완벽하고 부드러운 아날로그 손그림 효과가 뿜어져 나오게 됩니다!
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>

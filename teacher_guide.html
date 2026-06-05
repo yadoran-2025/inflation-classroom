@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>교사용 수업 지도안 - 인플레이션과 통화정책</title>
+    <style>
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            line-height: 1.7;
+            color: #333333;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 30px 15px;
+            background-color: #f4f6f9;
+        }
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: #ffffff;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+        header p {
+            margin: 10px 0 0 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .section-card {
+            background-color: #ffffff;
+            padding: 35px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        h2 {
+            color: #1e3a8a;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.6em;
+        }
+        h3 {
+            color: #2563eb;
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            font-size: 0.85em;
+            font-weight: 600;
+            border-radius: 4px;
+            margin-right: 6px;
+        }
+        .badge-concept { background-color: #fef3c7; color: #d97706; }
+        .badge-simulator { background-color: #d1fae5; color: #065f46; }
+        .badge-activity { background-color: #f3e8ff; color: #6b21a8; }
+        .badge-choice { background-color: #e0f2fe; color: #0369a1; }
+        
+        .box {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 5px solid;
+        }
+        .box-concept {
+            background-color: #fffbeb;
+            border-color: #fbbf24;
+        }
+        .box-simulator {
+            background-color: #f0fdf4;
+            border-color: #4ade80;
+        }
+        .box-activity {
+            background-color: #faf5ff;
+            border-color: #c084fc;
+        }
+        .box-choice {
+            background-color: #f0f9ff;
+            border-color: #38bdf8;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+        }
+        tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+        .correct-answer {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        .tips {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        .tips ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .tips li {
+            margin-bottom: 8px;
+        }
+        .screenshot {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>인플레이션과 통화정책 수업 지도안</h1>
+        <p>에듀테크 앱을 활용한 참여형 수업 설계 가이드</p>
+    </header>
+
+    <div class="section-card">
+        <h2>수업 개요</h2>
+        <p>본 수업은 인플레이션의 정의, 원인, 그리고 다양한 경제주체에 미치는 영향을 학습한 뒤, 중앙은행의 통화정책(금리 조절) 프로세스를 가상의 시나리오를 바탕으로 체험할 수 있도록 설계되었습니다.</p>
+        
+        <div class="meta-box">
+            <div class="meta-grid">
+                <div class="meta-item"><strong>대상 학년:</strong> 중학교 3학년 사회(경제) 및 고등학교 통합사회/경제</div>
+                <div class="meta-item"><strong>소요 시간:</strong> 1차시 (45분~50분)</div>
+                <div class="meta-item"><strong>수업 목표:</strong> 
+                    <ul>
+                        <li>물가와 화폐 가치의 반비례 관계를 설명할 수 있다.</li>
+                        <li>통화량 조절이 물가와 화폐가치에 미치는 영향을 시뮬레이션으로 이해한다.</li>
+                        <li>인플레이션 시기 유리한 자산군과 불리한 주체를 판별할 수 있다.</li>
+                        <li>중앙은행의 기준금리 정책 하에서 발생하는 물가와 고용의 상충관계(딜레마)를 시각화 도구로 체험하고 해답을 제시한다.</li>
+                    </ul>
+                </div>
+                <div class="meta-item"><strong>준비물:</strong> 학생 개인 스마트 기기(태블릿/노트북) 또는 모바일 기기, 화이트보드</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h2>단계별 수업 흐름 &amp; 앱 활용법</h2>
+
+        <!-- Scene 0 -->
+        <h3>[도입] Scene 0. 금리 문제, 대체 왜 이렇게 싸우는가?</h3>
+        <p><strong>수업 활동:</strong> 실생활 및 신문 기사 속 대립 상황을 시각적으로 확인하고 동기 부여하기.</p>
+        <ul>
+            <li><strong>화면 구성:</strong> 문화일보의 '금리 인하 신경전' 신문 기사와 금리 조정을 둘러싼 두 가지 주장 제시.
+                <ul>
+                    <li><strong>주장 A:</strong> "실업자가 늘어나니 금리를 낮춰 기업 투자를 촉진하고 고용을 늘려야 한다."</li>
+                    <li><strong>주장 B:</strong> "지금 물가가 너무 높다. 여기서 금리를 내리면 돈이 더 풀려 큰일 난다."</li>
+                </ul>
+            </li>
+            <li><strong>교사 가이드:</strong> 금리 인하를 외치는 목소리와 물가 안정을 외치는 목소리의 차이점을 읽고, 왜 이들이 대립하는지 스스로 고민해 보게 유도합니다.</li>
+        </ul>
+        <img src="public/lesson/scene0.png" alt="Scene 0 학생 화면" class="screenshot">
+
+        <!-- Scene 1 -->
+        <h3>[학습 1] Scene 1. 1544년으로부터의 교훈</h3>
+        <p><strong>수업 활동:</strong> 역사적 사례(헨리 8세의 대악화 정책)를 통한 화폐 가치와 물가의 관계 이해.</p>
+        
+        <div class="box box-choice">
+            <span class="badge badge-choice">상인 질문 피드백</span>
+            <p><strong>Q:</strong> 은 함량이 25%로 떨어진 헨리 8세의 새 은화가 유통될 때, 칼 한 자루를 은화 1닢에 팔던 상인은 어떻게 할까?</p>
+            <ul>
+                <li>선택지 1: 그냥 지금처럼 은화 하나 받고 준다.</li>
+                <li>선택지 2: <strong>은화에 은이 없는데 그게 은화냐? 난 3개는 받아야겠다. (정답)</strong></li>
+            </ul>
+        </div>
+
+        <div class="box box-simulator">
+            <span class="badge badge-simulator">시뮬레이터 1: 화폐가치와 물가 시소</span>
+            <p><strong>동작 원리:</strong> 화폐가치 노드를 마우스나 터치로 아래위로 조작해 봅니다.</p>
+            <ul>
+                <li>화폐가치 낮춤(25% 이하) &rarr; 물가 급증(오름, 75% 이상)</li>
+                <li>화폐가치 높임(75% 이상) &rarr; 물가 하락(내림, 25% 이하)</li>
+            </ul>
+        </div>
+
+        <div class="box box-concept">
+            <span class="badge badge-concept">개념 정리</span>
+            <p>화폐의 가치가 하락하면 가격(물건값)이 오릅니다. 이를 <strong>"물가 상승"</strong>이라 하며, 물가가 계속해서 상승하는 경제 현상을 <strong>"인플레이션"</strong>이라고 정의합니다.</p>
+        </div>
+        <img src="public/lesson/scene1_simulator.png" alt="Scene 1 학생 화면" class="screenshot">
+
+        <!-- Scene 2 -->
+        <h3>[학습 2] Scene 2. 흔해지면 싸지고, 귀해지면 비싸진다</h3>
+        <p><strong>수업 활동:</strong> 현대 지폐 시스템에서의 '통화량'과 '기준금리'의 상관관계 파악.</p>
+        
+        <div class="box box-simulator">
+            <span class="badge badge-simulator">시뮬레이터 2: 기준금리 시소 (잠금 해제 퀴즈)</span>
+            <p><strong>동작 원리:</strong> 최초 상태에서는 금리 레버가 잠겨있어 작동하지 않습니다. 아래 빈칸에 적절한 단어를 드래그 앤 드롭으로 채워 정답을 맞추면 시소가 활성화됩니다.</p>
+            <ul>
+                <li><strong>빈칸 ①:</strong> 통화량</li>
+                <li><strong>빈칸 ②:</strong> 화폐가치</li>
+                <li><strong>빈칸 ③:</strong> 물가</li>
+            </ul>
+            <p><strong>잠금 해제 후 조작 포인트:</strong></p>
+            <ul>
+                <li><strong>기준금리 인상(높음):</strong> 통화량 <strong>줄어듦</strong> &rarr; 화폐가치 <strong>강해짐</strong> &rarr; 물가 <strong>내림</strong></li>
+                <li><strong>기준금리 인하(낮음):</strong> 통화량 <strong>많아짐</strong> &rarr; 화폐가치 <strong>약해짐</strong> &rarr; 물가 <strong>오름</strong></li>
+            </ul>
+        </div>
+        <img src="public/lesson/scene2_simulator.png" alt="Scene 2 학생 화면" class="screenshot">
+
+        <!-- Scene 3 -->
+        <h3>[활동 1] Scene 3. 물가 상승의 다른 원인</h3>
+        <p><strong>수업 활동:</strong> 인플레이션이 발생하는 3가지 핵심 원인을 신문 뉴스를 통해 분류해 보기.</p>
+
+        <div class="box box-concept">
+            <span class="badge badge-concept">개념 정리</span>
+            <ol>
+                <li><strong>통화량 증가 (화폐적 요인):</strong> 시중에 유통되는 화폐 자체가 늘어날 때</li>
+                <li><strong>수요 증가 (수요 견인 인플레이션):</strong> 가계, 기업 등의 구매 욕구가 전체 공급량을 초과할 때</li>
+                <li><strong>생산 비용 증가 (비용 인상 인플레이션):</strong> 원자재 가격이나 임금 등이 올라 제품 원가가 상승할 때</li>
+            </ol>
+        </div>
+
+        <div class="box box-activity">
+            <span class="badge badge-activity">뉴스 매칭 액티비티</span>
+            <table>
+                <thead>
+                    <tr>
+                        <th>뉴스 내용</th>
+                        <th>정답 카테고리</th>
+                        <th>교사 힌트 가이드</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>"정부가 대규모 지원금을 지급해서, 사람들의 소비가 크게 늘었다."</td>
+                        <td class="correct-answer">수요 견인</td>
+                        <td>"사람들이 더 사려고(수요) 했나요?"</td>
+                    </tr>
+                    <tr>
+                        <td>"정부가 이자율을 낮추자 사람들이 돈을 많이 빌렸고, 시중에 돈이 많이 풀리면서 화폐 가치가 떨어졌다."</td>
+                        <td class="correct-answer">통화량 증가</td>
+                        <td>"돈(통화)의 총량이 늘어났나요?"</td>
+                    </tr>
+                    <tr>
+                        <td>"국제 유가가 급등해 운송비와 생산비가 올랐다."</td>
+                        <td class="correct-answer">비용 인상</td>
+                        <td>"물건을 만드는 데 드는 비용이 올랐나요?"</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <img src="public/lesson/scene3_activity.png" alt="Scene 3 학생 화면" class="screenshot">
+
+        <!-- Scene 4 -->
+        <h3>[활동 2] Scene 4. 인플레이션에 울고 웃는 사람들</h3>
+        <p><strong>수업 활동:</strong> 인플레이션(물가 상승 &amp; 화폐가치 하락) 시기 각 경제주체의 이익과 손해 여부 판별 (스와이프 카드 게임형 활동).</p>
+        
+        <div class="box box-activity">
+            <span class="badge badge-activity">인물 스와이프 판정표</span>
+            <table>
+                <thead>
+                    <tr>
+                        <th>등장 인물</th>
+                        <th>대사 &amp; 입장</th>
+                        <th>정답</th>
+                        <th>교사 설명 포인트</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>월급 생활자</strong></td>
+                        <td>"월급은 1년 단위로 계약하여 고정되어 있어요."</td>
+                        <td class="correct-answer">불리하다 (운다)</td>
+                        <td>물가는 오르지만 소득이 고정되어 있으면 실질 구매력이 줄어듭니다.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>은행 예금 보유자</strong></td>
+                        <td>"은행 예금에 500만 원을 넣어놓고 고정 이자만 받아요."</td>
+                        <td class="correct-answer">불리하다 (운다)</td>
+                        <td>화폐가치가 하락하므로 통장에 찍힌 액수는 같아도 실질적 돈의 가치는 낮아집니다.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>고정금리 대출자</strong></td>
+                        <td>"1억 대출을 받아 매년 고정으로 400만 원씩 갚고 있어요."</td>
+                        <td class="correct-answer">유리하다 (웃는다)</td>
+                        <td>돈의 가치가 떨어져서 실질적인 상환 부담이 경감됩니다.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>밀 수입 기업</strong></td>
+                        <td>"밀을 수입해 파는데, 국내 밀값이 크게 올랐어요."</td>
+                        <td class="correct-answer">유리하다 (웃는다)</td>
+                        <td>국내 물가와 원자재 가격이 비싸질 때 원재료를 해외에서 수입하는 기업이 제품 가격을 올리거나 화폐가치가 변할 시 유리/불리해질 수 있는 특성을 학습합니다.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>장기 채무자</strong></td>
+                        <td>"집 장만을 위해 10억을 빌렸고 30년 뒤에 갚기로 했어요."</td>
+                        <td class="correct-answer">유리하다 (웃는다)</td>
+                        <td>돈의 가치가 떨어져서 먼 미래에 갚을 돈의 실질 가치가 낮아집니다.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>장기 채권자</strong></td>
+                        <td>"친구에게 10억을 빌려줬고 10년 뒤 그대로 돌려받기로 했어요."</td>
+                        <td class="correct-answer">불리하다 (운다)</td>
+                        <td>명목 금액은 10억으로 같으나 10년 뒤 돌려받은 돈으로 살 수 있는 물건의 양은 현저히 줄어듭니다.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>실물자산 보유자</strong></td>
+                        <td>"금이나 부동산을 보유하고 있습니다."</td>
+                        <td class="correct-answer">유리하다 (웃는다)</td>
+                        <td>화폐가치가 떨어질 때 실물자산의 가치는 동반 상승하므로 자산 보존에 유리합니다.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <img src="public/lesson/scene4_activity.png" alt="Scene 4 학생 화면" class="screenshot">
+
+        <!-- Scene 5 -->
+        <h3>[활동 3] Scene 5. 인플레이션에서 살아남기 (통화정책 딜레마)</h3>
+        <p><strong>수업 활동:</strong> 중앙은행 통화위원회 입장이 되어 물가 상승률과 고용 지표를 최적으로 유지하기 위한 의사결정 시뮬레이션.</p>
+        
+        <div class="box box-activity">
+            <span class="badge badge-activity">중앙은행 3대 가상 시나리오 가이드</span>
+            
+            <h4>시나리오 1: 일자리가 사라지고 있습니다 (고실업 상황)</h4>
+            <ul>
+                <li><strong>지표 상태:</strong> 물가(낮음, 30), 실업(높음, 78)</li>
+                <li><strong>올바른 진단:</strong> <strong>실업</strong> 문제가 더 시급함.</li>
+                <li><strong>금리 처방:</strong> <strong>금리 인하(Cut)</strong> &rarr; 대출 증가, 투자 촉진 &rarr; 실업 감소(55로 감소)</li>
+                <li><strong>부작용 예측:</strong> 경기 활성화로 인해 <strong>물가 상승 압력</strong>이 높아짐(물가 52로 상승)</li>
+            </ul>
+
+            <h4>시나리오 2: 장바구니 물가가 무섭게 오르고 있습니다 (고물가 상황)</h4>
+            <ul>
+                <li><strong>지표 상태:</strong> 물가(높음, 82), 실업(낮음, 30)</li>
+                <li><strong>올바른 진단:</strong> <strong>물가</strong> 상승이 더 심각함.</li>
+                <li><strong>금리 처방:</strong> <strong>금리 인상(Raise)</strong> &rarr; 긴축재정, 소비/투자 위축 &rarr; 물가 하락(48로 감소)</li>
+                <li><strong>부작용 예측:</strong> 기업의 이자 부담 증가와 소비 둔화로 인해 <strong>실업 증가</strong>(실업 45로 상승)</li>
+            </ul>
+
+            <h4>시나리오 3: 물가도 오르고 일자리도 줄고 있습니다 (스태그플레이션)</h4>
+            <ul>
+                <li><strong>지표 상태:</strong> 물가(높음, 82), 실업(높음, 76)</li>
+                <li><strong>올바른 진단:</strong> <strong>물가와 실업 모두</strong> 심각한 복합적 위기.</li>
+                <li><strong>금리 처방 및 부작용 (정답 없음 - 트레이드오프 토론 활성화):</strong>
+                    <ul>
+                        <li><strong>금리 인상(Raise):</strong> 물가는 58로 하락하지만, 기업 위축으로 실업은 88로 급증.</li>
+                        <li><strong>금리 인하(Cut):</strong> 실업은 58로 해소되지만, 인플레이션이 92로 폭등.</li>
+                        <li><strong>금리 유지(Hold):</strong> 급격한 충격은 피하지만(물가 82, 실업 76), 해결책이 되지 못함.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <img src="public/lesson/scene5_activity.png" alt="Scene 5 학생 화면" class="screenshot">
+    </div>
+
+    <div class="section-card">
+        <h2>교사용 수업 운영 팁 &amp; 토론 질문</h2>
+        <div class="tips">
+            <ul>
+                <li><strong>도입 단계:</strong> 뉴스 헤드라인을 적극적으로 활용해 아이들에게 '기준금리 동결/인하' 뉴스가 왜 매번 탑 뉴스로 나오는지 환기시킵니다.</li>
+                <li><strong>시뮬레이션 조작 시:</strong> 단순히 레버를 조작하는 것에 그치지 않고, "기준금리가 올라가면 내 통장에 찍히는 예금 이자는 어떻게 될까? 대출 이자는?" 같은 연계 질문을 던져 실생활과 연결하도록 지도합니다.</li>
+                <li><strong>스태그플레이션 시나리오 토론:</strong> 마지막 스태그플레이션 상황에서는 "너희가 한 나라의 은행장이라면 고용을 살릴 것인가, 물가를 잡을 것인가?"를 두고 찬반 투표나 모둠 토론을 진행하면 매우 효과적입니다.</li>
+                <li><strong>정리 멘트:</strong> 인플레이션은 무조건 없애야 하는 악이 아니라, 경제 성장과 함께 따라오는 <strong>'관리의 대상'</strong>임을 강조하며 수업을 마칩니다.</li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
