@@ -79,12 +79,12 @@ export function Base100Simulator({ onCompleteChange }: { onCompleteChange?: (com
       </div>
 
       {/* Formula & Status Display */}
-      <div className="border-t-2 border-dashed border-ink/20 pt-4 text-center space-y-2">
+      <div className="base100-result border-t-2 border-dashed border-ink/20 pt-4 text-center space-y-2">
         <div className="price-index-formula bg-paper border border-ink/10 rounded-lg p-2 font-mono text-ink-soft">
           계산식: (현재 {currentPrice.toLocaleString()}원 / 기준 10,000원) × 100 = <strong>{priceIndex}</strong>
         </div>
 
-        <div className="font-bold">
+        <div className="base100-status font-bold">
           {pctChange > 0 ? (
             <span className="text-bad text-sm">
               📈 기준 시점(100)보다 물가가 약 <strong>{pctChange}%</strong> 올랐습니다!

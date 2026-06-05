@@ -1261,6 +1261,7 @@ function LessonPlayer({
   const hasSimulatorMarker = beat.body.some((line) => line.trim() === SIMULATOR_BODY_MARKER)
   const hasInteractiveComponent = Boolean(beat.simulator || beat.activity)
   const shouldShowVisual = Boolean((beat.visual || beat.image) && !hasInteractiveComponent)
+  const shouldShowInlineVisual = Boolean(beat.image && beat.choice)
   const [introSceneIndex, setIntroSceneIndex] = useState<number | null>(() =>
     position.beatIndex === 0 ? position.sceneIndex : null,
   )
@@ -1437,7 +1438,7 @@ function LessonPlayer({
               <p className="hand-tag shrink-0">SCENE {scene.number}</p>
               <h1>{scene.title}</h1>
             </div>
-            <div className={`lesson-content-grid ${shouldShowVisual ? '' : 'without-visual'}`}>
+            <div className={`lesson-content-grid ${shouldShowVisual ? '' : 'without-visual'} ${shouldShowInlineVisual ? 'inline-visual-flow' : ''}`}>
               <div className="lesson-copy-column space-y-5">
                 <div>
                   <div className="lesson-body-text text-ink-soft">
@@ -1473,6 +1474,9 @@ function LessonPlayer({
                     response={beat.response}
                   />
                 ) : null}
+                {shouldShowInlineVisual ? (
+                  <SketchVisual image={beat.image} visual={beat.visual} />
+                ) : null}
                 {beat.choice ? (
                   <LessonChoicePanel
                     choice={beat.choice}
@@ -1497,7 +1501,7 @@ function LessonPlayer({
                   />
                 ) : null}
               </div>
-              {shouldShowVisual ? (
+              {shouldShowVisual && !shouldShowInlineVisual ? (
                 <SketchVisual image={beat.image} visual={beat.visual} onCompleteChange={handleVisualCompleteChange} />
               ) : null}
             </div>

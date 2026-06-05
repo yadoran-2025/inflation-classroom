@@ -102,6 +102,12 @@ input {
   grid-template-columns: minmax(0, 1fr);
 }
 
+.lesson-content-grid.inline-visual-flow .sketch-stage {
+  width: min(100%, 38rem);
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .lesson-copy-column {
   min-width: 0;
 }
@@ -152,7 +158,7 @@ input {
 }
 
 .student-shell {
-  --student-simulator-side-gutter: clamp(1rem, 4vw, 2rem);
+  --student-simulator-side-gutter: clamp(0.45rem, 2.2vw, 0.85rem);
 }
 
 .student-waiting-panel .hand-tag {
@@ -191,6 +197,98 @@ input {
 .student-shell .lesson-body-text > .base100-simulator,
 .student-shell .lesson-copy-column > .base100-simulator {
   width: min(calc(100% - (var(--student-simulator-side-gutter) * 2)), 58rem);
+}
+
+.student-shell .price-basket-simulator {
+  max-width: min(100%, 34rem);
+}
+
+.student-shell .price-basket-items,
+.student-shell .base100-comparison {
+  min-width: 0;
+}
+
+.student-shell .price-basket-item {
+  min-width: 0;
+}
+
+.student-shell .price-basket-item .text-2xl {
+  font-size: clamp(1.55rem, 6vw, 2rem);
+  line-height: 1;
+}
+
+.student-shell .price-basket-item .text-xs,
+.student-shell .price-basket-price {
+  font-size: clamp(0.78rem, 3.2vw, 0.95rem);
+  line-height: 1.12;
+}
+
+.student-shell .price-basket-price {
+  white-space: nowrap;
+  word-break: keep-all;
+}
+
+.student-shell .price-basket-actions button {
+  min-width: 0;
+  font-size: clamp(0.9rem, 3.6vw, 1.05rem);
+}
+
+.student-shell .base100-simulator .text-4xl {
+  font-size: clamp(2rem, 8vw, 2.6rem);
+  line-height: 1;
+}
+
+.student-shell .base100-simulator .text-sm,
+.student-shell .base100-simulator .text-xs {
+  line-height: 1.18;
+}
+
+.student-shell .base100-simulator .font-mono {
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+.student-shell .price-index-formula {
+  font-size: clamp(0.82rem, 3.2vw, 1rem);
+  line-height: 1.25;
+}
+
+.student-shell .base100-status span {
+  display: block;
+  font-size: clamp(1rem, 4.1vw, 1.22rem);
+  line-height: 1.28;
+}
+
+@media (max-width: 480px) {
+  .student-shell .lesson-body-text > .hand-panel,
+  .student-shell .lesson-copy-column > .hand-panel {
+    padding: 0.85rem;
+  }
+
+  .student-shell .price-basket-items {
+    gap: 0.45rem;
+  }
+
+  .student-shell .price-basket-item {
+    padding: 0.5rem 0.35rem;
+    gap: 0.45rem;
+  }
+
+  .student-shell .price-basket-actions {
+    gap: 0.35rem;
+  }
+
+  .student-shell .price-basket-actions button {
+    height: 2.05rem;
+  }
+
+  .student-shell .base100-comparison {
+    gap: 0.7rem;
+  }
+
+  .student-shell .base100-comparison > div {
+    padding: 0.75rem 0.55rem;
+  }
 }
 
 @media (min-width: 768px) {
@@ -472,8 +570,7 @@ input {
   text-align: center;
 }
 
-.student-shell .activity-card h3,
-.student-shell .text-2xl {
+.student-shell .activity-card h3 {
   font-size: clamp(1.8rem, 6vw, 2.35rem);
   line-height: 1.12;
 }
@@ -741,6 +838,34 @@ input {
 }
 
 @media (max-width: 640px) {
+  .student-shell .interest-rate-simulator {
+    width: min(calc(100% - (var(--student-simulator-side-gutter) * 2)), 36rem);
+    padding: 0.85rem;
+  }
+
+  .student-shell .rate-simulator-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .student-shell .rate-simulator-heading span {
+    font-size: clamp(1.08rem, 4.2vw, 1.3rem);
+    line-height: 1.25;
+  }
+
+  .student-shell .rate-simulator-heading strong {
+    align-self: flex-end;
+    font-size: clamp(1.12rem, 4.4vw, 1.42rem);
+  }
+
+  .student-shell .rate-seesaw {
+    display: block;
+    width: min(112%, 38rem);
+    min-height: 18rem;
+    margin: 0.35rem -6% 0;
+  }
+
   .student-shell .rate-node text {
     font-size: 2.35rem;
     stroke-width: 3.2;
@@ -756,6 +881,22 @@ input {
 
   .student-shell .slot-empty-text {
     font-size: 1.48rem !important;
+  }
+
+  .student-shell .rate-matching-pool {
+    margin-top: 0.65rem;
+    padding: 0.8rem;
+  }
+
+  .student-shell .matching-instruction {
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    line-height: 1.35;
+  }
+
+  .student-shell .word-card {
+    min-height: 3rem;
+    padding: 0.5rem 0.8rem;
+    font-size: clamp(1.08rem, 4.1vw, 1.28rem);
   }
 }
 

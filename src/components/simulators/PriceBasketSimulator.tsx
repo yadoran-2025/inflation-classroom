@@ -44,30 +44,30 @@ export function PriceBasketSimulator({ onCompleteChange }: { onCompleteChange?: 
   }, [hasUsedAnyControl, onCompleteChange])
 
   return (
-    <div className="hand-panel p-4 bg-white/60 space-y-5 text-ink border-2 border-ink rounded-xl shadow-sm max-w-md mx-auto">
+    <div className="price-basket-simulator hand-panel p-4 bg-white/60 space-y-5 text-ink border-2 border-ink rounded-xl shadow-sm mx-auto">
       <div className="text-center space-y-1">
         <h4 className="font-display font-black text-lg">🛒 평균 장바구니 물가 계산기</h4>
         <p className="text-xs text-ink-soft">상품들의 가격을 바꿔가며 평균 물가 수준의 변화를 관찰해보세요.</p>
       </div>
 
       {/* Items Grid */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="price-basket-items grid grid-cols-3 gap-3">
         {items.map((item) => (
           <div
             key={item.id}
-            className="border-2 border-ink bg-paper rounded-lg p-2.5 flex flex-col items-center justify-between gap-2 shadow-[2px_2px_0px_rgba(0,0,0,1)]"
+            className="price-basket-item border-2 border-ink bg-paper rounded-lg p-2.5 flex flex-col items-center justify-between gap-2 shadow-[2px_2px_0px_rgba(0,0,0,1)]"
           >
             <span className="text-2xl" role="img" aria-label={item.name}>
               {item.emoji}
             </span>
             <div className="text-center">
               <p className="font-bold text-xs">{item.name}</p>
-              <p className="font-mono text-xs font-bold text-ink-soft mt-0.5">
+              <p className="price-basket-price font-mono text-xs font-bold text-ink-soft mt-0.5">
                 {item.price.toLocaleString()}원
               </p>
             </div>
             {/* Control Buttons */}
-            <div className="flex gap-1.5 w-full">
+            <div className="price-basket-actions flex gap-1.5 w-full">
               <button
                 type="button"
                 className="flex-1 flex items-center justify-center border border-ink bg-white rounded hover:bg-yellow-soft font-bold text-xs h-7 focus:outline-none"
