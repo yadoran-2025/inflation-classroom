@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { lessonScenes } from '../data/lessonScenes'
 import {
+  clampPosition,
   comparePositions,
+  getStudentLessonPosition,
   getNextPosition,
   getPreviousPosition,
   getSceneStartPosition,
@@ -11,6 +13,17 @@ import {
 } from './navigation'
 
 describe('lesson navigation', () => {
+  it('restores and clamps a saved student lesson position', () => {
+    expect(getStudentLessonPosition({ currentSceneIndex: 2, currentBeatIndex: 1 })).toEqual({
+      sceneIndex: 2,
+      beatIndex: 1,
+    })
+
+    expect(getStudentLessonPosition({ currentSceneIndex: 999, currentBeatIndex: 999 })).toEqual(
+      clampPosition({ sceneIndex: 999, beatIndex: 999 }),
+    )
+  })
+
   it('moves to the next beat inside the same scene', () => {
     expect(getNextPosition({ sceneIndex: 0, beatIndex: 0 })).toEqual({ sceneIndex: 0, beatIndex: 1 })
   })

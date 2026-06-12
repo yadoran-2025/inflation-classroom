@@ -39,6 +39,7 @@ import { lessonScenes } from './data/lessonScenes'
 import { firstResponsesByStudentAndItem, summarizeActivity } from './lib/analytics'
 import { buildSpaceId } from './lib/ids'
 import {
+  getStudentLessonPosition,
   getNextPosition,
   getPreviousPosition,
   getSceneStartPosition,
@@ -1177,11 +1178,10 @@ function StudentPage() {
             <span>{student.nickname}</span>
           </div>
           <StudentLessonSession
-            key={`${classDoc.sceneIndex}-${classDoc.beatIndex}`}
+            key={student.id}
             classId={classId}
             student={student}
             responses={studentResponses}
-            initialPosition={{ sceneIndex: classDoc.sceneIndex, beatIndex: classDoc.beatIndex }}
           />
         </div>
       </main>
@@ -1352,24 +1352,17 @@ function StudentLessonSession({
   classId,
   student,
   responses,
-  initialPosition,
 }: {
   classId: string
   student: StudentDoc
   responses: ResponseDoc[]
-  initialPosition: LessonPosition
 }) {
-  const [localPosition, setLocalPosition] = useState<LessonPosition>(initialPosition)
-  const lastSavedSceneRef = useRef<number | null>(null)
+  const [localPosition, setLocalPosition] = useState<LessonPosition>(() => getStudentLessonPosition(student))
 
-  useEffect(() => {
-    if (lastSavedSceneRef.current === localPosition.sceneIndex) {
-      return
-    }
-
-    lastSavedSceneRef.current = localPosition.sceneIndex
-    void markStudentPosition(classId, student.id, localPosition)
-  }, [classId, localPosition, student.id])
+  const handlePositionChange = useCallback((nextPosition: LessonPosition) => {
+    setLocalPosition(nextPosition)
+    void markStudentPosition(classId, student.id, nextPosition)
+  }, [classId, student.id])
 
   return (
     <LessonPlayer
@@ -1377,7 +1370,7 @@ function StudentLessonSession({
       student={student}
       responses={responses}
       position={localPosition}
-      onPositionChange={setLocalPosition}
+      onPositionChange={handlePositionChange}
       onSubmitResponse={submitResponse}
     />
   )

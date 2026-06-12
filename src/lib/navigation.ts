@@ -1,5 +1,5 @@
 import { lessonScenes } from '../data/lessonScenes'
-import type { LessonPosition } from '../types'
+import type { LessonPosition, StudentDoc } from '../types'
 
 export function clampPosition(position: LessonPosition): LessonPosition {
   const sceneIndex = Math.min(Math.max(position.sceneIndex, 0), lessonScenes.length - 1)
@@ -7,6 +7,15 @@ export function clampPosition(position: LessonPosition): LessonPosition {
   const beatIndex = Math.min(Math.max(position.beatIndex, 0), beatCount - 1)
 
   return { sceneIndex, beatIndex }
+}
+
+export function getStudentLessonPosition(
+  student: Pick<StudentDoc, 'currentSceneIndex' | 'currentBeatIndex'>,
+): LessonPosition {
+  return clampPosition({
+    sceneIndex: student.currentSceneIndex,
+    beatIndex: student.currentBeatIndex,
+  })
 }
 
 export function getNextPosition(position: LessonPosition): LessonPosition {
