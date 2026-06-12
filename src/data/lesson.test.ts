@@ -49,6 +49,19 @@ describe('lesson data', () => {
     expect(new Set(responseIds).size).toBe(responseIds.length)
   })
 
+  it('supports balanced inline highlighter marks in lesson body text', () => {
+    const highlightedLines = lessonScenes.flatMap((scene) =>
+      scene.beats.flatMap((beat) => beat.body.filter((line) => line.includes('=='))),
+    )
+
+    expect(highlightedLines.length).toBeGreaterThan(0)
+
+    for (const line of highlightedLines) {
+      expect((line.match(/==/g) ?? []).length % 2).toBe(0)
+      expect(line).toMatch(/==\S[\s\S]*?\S==/)
+    }
+  })
+
   it('has complete people card answers', () => {
     const optionIds = new Set(peopleOptions.map((option) => option.id))
     expect(peopleOptions.map((option) => option.id)).toEqual(['benefit', 'harm'])

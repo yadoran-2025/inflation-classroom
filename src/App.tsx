@@ -4,7 +4,9 @@ import {
   ArrowRight,
   Clipboard,
   DoorOpen,
+  Eye,
   Home,
+  MessageCircle,
   PlayCircle,
   Plus,
   QrCode,
@@ -88,6 +90,9 @@ type SavedStudentJoin = {
   studentId: string
   nickname: string
 }
+
+type ResponseInput = Omit<ResponseDoc, 'id' | 'createdAt'>
+type SubmitResponseHandler = (response: ResponseInput, previousResponse?: ResponseDoc) => void | Promise<void>
 
 function getLessonChoiceOptions(): { id: string; label: string }[] {
   return lessonChoiceItems.flatMap((item) =>
@@ -276,6 +281,7 @@ function App() {
         <Route path="/teacher/:classId" element={<TeacherPage />} />
         <Route path="/join/:classId" element={<JoinPage />} />
         <Route path="/student/:classId/:studentId" element={<StudentPage />} />
+        <Route path="/preview" element={<StudentPreviewPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
@@ -329,6 +335,19 @@ function HomePage() {
             </HandButton>
           </form>
         </section>
+        <div className="home-secondary-actions">
+          <Link to="/preview" className="home-secondary-action">
+            <Eye className="size-5" aria-hidden="true" />
+            학생 화면 미리보기
+          </Link>
+          <a
+            href="https://blog.naver.com/yadoransw/224307366490"
+            className="home-secondary-action"
+          >
+            <MessageCircle className="size-5" aria-hidden="true" />
+            오류 보고 / 피드백 남기기
+          </a>
+        </div>
       </div>
     </main>
   )
@@ -1170,6 +1189,128 @@ function StudentPage() {
   )
 }
 
+function StudentPreviewPage() {
+  const [position, setPosition] = useState<LessonPosition>({ sceneIndex: 0, beatIndex: 0 })
+  const [responses, setResponses] = useState<ResponseDoc[]>([])
+  const [isWaitingScreen, setIsWaitingScreen] = useState(true)
+  const previewStudent = useMemo<StudentDoc>(() => ({
+    id: 'preview-student',
+    classId: 'preview-class',
+    nickname: '미리보기 학생',
+    currentSceneIndex: position.sceneIndex,
+    currentBeatIndex: position.beatIndex,
+    lastSeenAt: 0,
+    createdAt: 0,
+  }), [position.beatIndex, position.sceneIndex])
+
+  const handlePreviewSubmit = useCallback<SubmitResponseHandler>((response, previousResponse) => {
+    const timestamp = Date.now()
+    const existingId = `preview-${response.activity}-${response.itemId}`
+    const nextResponse: ResponseDoc = {
+      ...response,
+      id: existingId,
+      createdAt: previousResponse?.createdAt ?? timestamp,
+      firstChoice: previousResponse?.firstChoice ?? previousResponse?.choice ?? response.choice,
+      firstCorrect: previousResponse?.firstCorrect ?? previousResponse?.correct ?? response.correct,
+      firstCreatedAt: previousResponse?.firstCreatedAt ?? previousResponse?.createdAt ?? timestamp,
+      updatedAt: timestamp,
+    }
+
+    setResponses((current) => {
+      const withoutCurrent = current.filter(
+        (item) => !(item.activity === response.activity && item.itemId === response.itemId),
+      )
+      return [...withoutCurrent, nextResponse]
+    })
+  }, [])
+
+  function movePreviewToLesson(nextPosition: LessonPosition) {
+    setIsWaitingScreen(false)
+    setPosition(nextPosition)
+  }
+
+  return (
+    <ConfettiProvider>
+      <main className="student-preview-page min-h-screen bg-paper pb-20 text-ink">
+        <div className="student-preview-topbar">
+          <Link to="/" className="student-preview-home">
+            <Home className="size-5" />
+            인플레이션 수업
+          </Link>
+          <span className="student-preview-badge">학생 화면 미리보기</span>
+        </div>
+
+        {isWaitingScreen ? (
+          <div className="student-shell mx-auto flex min-h-[calc(100vh-5rem)] w-full flex-col px-4 py-5">
+            <div className="mb-3 flex items-center justify-end gap-3 text-sm text-ink-soft">
+              <span>{previewStudent.nickname}</span>
+            </div>
+            <section className="student-waiting-panel hand-panel w-full space-y-5 p-5 text-center sm:p-6">
+              <p className="hand-tag mx-auto w-fit">입장 완료</p>
+              <h1 className="font-display text-3xl font-black">교사와 함께 영상을 먼저 보고, 활동을 시작합시다</h1>
+              <p className="text-ink-soft font-bold">
+                선생님이 교사 대시보드에서 활동 시작 버튼을 누르면 자동으로 수업 화면이 열립니다.
+              </p>
+              <StudentWaitingVideoCard />
+              <p className="rounded-xl border-2 border-ink bg-blue-soft p-3 font-bold">
+                {previewStudent.nickname} 님, 잠시만 기다려주세요.
+              </p>
+            </section>
+            <div className="student-controls">
+              <div className="scene-dots" aria-label="Preview progress">
+                <button
+                  type="button"
+                  className="scene-dot is-active"
+                  aria-label="대기 화면으로 이동"
+                  onClick={() => setIsWaitingScreen(true)}
+                />
+                {lessonScenes.map((item, index) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className="scene-dot"
+                    aria-label={`${item.number}번 Scene으로 이동`}
+                    onClick={() => movePreviewToLesson(getSceneStartPosition(index))}
+                  />
+                ))}
+              </div>
+              <div className="student-control-actions">
+                <HandButton className="w-full justify-center sm:w-auto" disabled variant="quiet">
+                  <ArrowLeft className="size-5" />
+                  이전
+                </HandButton>
+                <HandButton
+                  className="w-full justify-center sm:w-auto"
+                  onClick={() => movePreviewToLesson({ sceneIndex: 0, beatIndex: 0 })}
+                >
+                  수업 화면 시작
+                  <ArrowRight className="size-5" />
+                </HandButton>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="student-shell mx-auto flex min-h-[calc(100vh-5rem)] w-full flex-col px-4 py-5">
+            <div className="mb-3 flex items-center justify-end gap-3 text-sm text-ink-soft">
+              <span>{previewStudent.nickname}</span>
+            </div>
+            <LessonPlayer
+              classId="preview-class"
+              student={previewStudent}
+              responses={responses}
+              position={position}
+              onPositionChange={setPosition}
+              allowFreeNavigation
+              onBeforeFirst={() => setIsWaitingScreen(true)}
+              onSubmitResponse={handlePreviewSubmit}
+            />
+          </div>
+        )}
+      </main>
+    </ConfettiProvider>
+  )
+}
+
 function StudentWaitingVideoCard() {
   return (
     <div className="student-waiting-video grid gap-4 text-left md:grid-cols-[minmax(0,1.08fr)_minmax(16rem,0.92fr)] md:items-stretch">
@@ -1237,6 +1378,7 @@ function StudentLessonSession({
       responses={responses}
       position={localPosition}
       onPositionChange={setLocalPosition}
+      onSubmitResponse={submitResponse}
     />
   )
 }
@@ -1247,12 +1389,18 @@ function LessonPlayer({
   responses,
   position,
   onPositionChange,
+  allowFreeNavigation = false,
+  onBeforeFirst,
+  onSubmitResponse = submitResponse,
 }: {
   classId: string
   student: StudentDoc
   responses: ResponseDoc[]
   position: LessonPosition
   onPositionChange: (position: LessonPosition) => void
+  allowFreeNavigation?: boolean
+  onBeforeFirst?: () => void
+  onSubmitResponse?: SubmitResponseHandler
 }) {
   const scene = lessonScenes[position.sceneIndex]
   const beat = scene.beats[position.beatIndex]
@@ -1333,12 +1481,16 @@ function LessonPlayer({
   }, [position])
 
   const canMoveToPosition = useCallback((nextPosition: LessonPosition): boolean => {
+    if (allowFreeNavigation) {
+      return true
+    }
+
     if (isUnlockedPosition(nextPosition)) {
       return true
     }
 
     return isForwardPosition(nextPosition) && isImmediateNextPosition(nextPosition) && completion.complete
-  }, [completion.complete, isForwardPosition, isImmediateNextPosition, isUnlockedPosition])
+  }, [allowFreeNavigation, completion.complete, isForwardPosition, isImmediateNextPosition, isUnlockedPosition])
 
   const moveStudent = useCallback((nextPosition: LessonPosition) => {
     if (!canMoveToPosition(nextPosition)) {
@@ -1370,6 +1522,7 @@ function LessonPlayer({
 
       if (event.key === 'ArrowLeft') {
         if (isFirst) {
+          onBeforeFirst?.()
           return
         }
 
@@ -1386,7 +1539,7 @@ function LessonPlayer({
           return
         }
 
-        if (!completion.complete) {
+        if (!allowFreeNavigation && !completion.complete) {
           return
         }
 
@@ -1401,7 +1554,17 @@ function LessonPlayer({
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [completion.complete, isFirst, isLast, isSceneIntroVisible, moveStudent, position, showAccuracyModal])
+  }, [
+    allowFreeNavigation,
+    completion.complete,
+    isFirst,
+    isLast,
+    isSceneIntroVisible,
+    moveStudent,
+    onBeforeFirst,
+    position,
+    showAccuracyModal,
+  ])
 
   return (
     <div className="scene-wipe-host flex flex-1 flex-col">
@@ -1472,6 +1635,7 @@ function LessonPlayer({
                     responses={responses}
                     sceneId={scene.id}
                     response={beat.response}
+                    onSubmitResponse={onSubmitResponse}
                   />
                 ) : null}
                 {shouldShowInlineVisual ? (
@@ -1483,6 +1647,7 @@ function LessonPlayer({
                     classId={classId}
                     student={student}
                     responses={responses}
+                    onSubmitResponse={onSubmitResponse}
                   />
                 ) : null}
                 {beat.concept ? (
@@ -1498,6 +1663,7 @@ function LessonPlayer({
                     classId={classId}
                     student={student}
                     responses={responses}
+                    onSubmitResponse={onSubmitResponse}
                   />
                 ) : null}
               </div>
@@ -1518,12 +1684,12 @@ function LessonPlayer({
                 type="button"
                 className={`scene-dot ${index === position.sceneIndex ? 'is-active' : ''}`}
                 aria-label={`${item.number}번 Scene으로 이동`}
-                disabled={!canMoveToPosition(getSceneStartPosition(index))}
+                disabled={!allowFreeNavigation && !canMoveToPosition(getSceneStartPosition(index))}
                 onClick={() => moveStudent(getSceneStartPosition(index))}
               />
             ))}
           </div>
-          {!completion.complete ? (
+          {!allowFreeNavigation && !completion.complete ? (
             <p className="student-progress-lock" role="status">
               {completion.message}
             </p>
@@ -1531,16 +1697,22 @@ function LessonPlayer({
           <div className="student-control-actions">
             <HandButton
               className="w-full justify-center sm:w-auto"
-              disabled={isFirst}
+              disabled={isFirst && !onBeforeFirst}
               variant="quiet"
-              onClick={() => moveStudent(getPreviousPosition(position))}
+              onClick={() => {
+                if (isFirst) {
+                  onBeforeFirst?.()
+                } else {
+                  moveStudent(getPreviousPosition(position))
+                }
+              }}
             >
               <ArrowLeft className="size-5" />
               이전
             </HandButton>
             <HandButton
               className="w-full justify-center sm:w-auto"
-              disabled={!completion.complete}
+              disabled={!allowFreeNavigation && !completion.complete}
               onClick={() => {
                 if (isLast) {
                   setShowAccuracyModal(true)
@@ -1604,24 +1776,35 @@ function ActivityPanel({
   classId,
   student,
   responses,
+  onSubmitResponse,
 }: {
   activity: ChoiceActivityKind
   classId: string
   student: StudentDoc
   responses: ResponseDoc[]
+  onSubmitResponse: SubmitResponseHandler
 }) {
   return (
     <div className="space-y-3">
-      {activity === 'news' ? <NewsActivity classId={classId} student={student} responses={responses} /> : null}
-      {activity === 'people' ? <PeopleActivity classId={classId} student={student} responses={responses} /> : null}
+      {activity === 'news' ? (
+        <NewsActivity classId={classId} student={student} responses={responses} onSubmitResponse={onSubmitResponse} />
+      ) : null}
+      {activity === 'people' ? (
+        <PeopleActivity classId={classId} student={student} responses={responses} onSubmitResponse={onSubmitResponse} />
+      ) : null}
       {activity === 'central-bank' ? (
-        <CentralBankActivity classId={classId} student={student} responses={responses} />
+        <CentralBankActivity
+          classId={classId}
+          student={student}
+          responses={responses}
+          onSubmitResponse={onSubmitResponse}
+        />
       ) : null}
     </div>
   )
 }
 
-function NewsActivity({ classId, student, responses }: ActivityProps) {
+function NewsActivity({ classId, student, responses, onSubmitResponse }: ActivityProps) {
   const latest = useLatestResponseMap(responses, 'news')
   const { triggerConfetti } = useConfetti()
 
@@ -1646,7 +1829,7 @@ function NewsActivity({ classId, student, responses }: ActivityProps) {
                       const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
                       triggerConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2)
                     }
-                    void submitResponse({
+                    void onSubmitResponse({
                       classId,
                       studentId: student.id,
                       studentNickname: student.nickname,
@@ -1674,7 +1857,13 @@ function NewsActivity({ classId, student, responses }: ActivityProps) {
   )
 }
 
-function LessonChoicePanel({ classId, student, responses, choice }: ActivityProps & { choice: LessonBeat['choice'] }) {
+function LessonChoicePanel({
+  classId,
+  student,
+  responses,
+  choice,
+  onSubmitResponse,
+}: ActivityProps & { choice: LessonBeat['choice'] }) {
   const latest = useLatestResponseMap(responses, 'lesson-choice')
   const answer = choice ? latest.get(choice.id) : undefined
   const { triggerConfetti } = useConfetti()
@@ -1702,7 +1891,7 @@ function LessonChoicePanel({ classId, student, responses, choice }: ActivityProp
                   const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
                   triggerConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2)
                 }
-                void submitResponse({
+                void onSubmitResponse({
                   classId,
                   studentId: student.id,
                   studentNickname: student.nickname,
@@ -1729,6 +1918,7 @@ function ShortAnswerPanel({
   responses,
   sceneId,
   response,
+  onSubmitResponse,
 }: ActivityProps & { sceneId: string; response: NonNullable<LessonBeat['response']> }) {
   const latest = useLatestResponseMap(responses, 'short-answer')
   const answer = latest.get(response.id)
@@ -1749,7 +1939,7 @@ function ShortAnswerPanel({
           return
         }
 
-        void submitResponse({
+        void onSubmitResponse({
           classId,
           studentId: student.id,
           studentNickname: student.nickname,
@@ -1817,6 +2007,7 @@ type ActivityProps = {
   classId: string
   student: StudentDoc
   responses: ResponseDoc[]
+  onSubmitResponse: SubmitResponseHandler
 }
 
 type CentralBankDiagnosisChoice = 'inflation' | 'unemployment' | 'both'
@@ -1836,7 +2027,7 @@ const centralBankSideEffectOptions: { id: CentralBankSideEffectChoice; label: st
   { id: 'investment-slowdown', label: '투자 위축 위험' },
 ]
 
-function PeopleActivity({ classId, student, responses }: ActivityProps) {
+function PeopleActivity({ classId, student, responses, onSubmitResponse }: ActivityProps) {
   const [index, setIndex] = useState(0)
   const card = peopleCards[index]
   const latest = useLatestResponseMap(responses, 'people')
@@ -1850,7 +2041,7 @@ function PeopleActivity({ classId, student, responses }: ActivityProps) {
     if (isCorrect && !alreadyCorrect) {
       triggerConfetti(window.innerWidth / 2, window.innerHeight * 0.4)
     }
-    void submitResponse({
+    void onSubmitResponse({
       classId,
       studentId: student.id,
       studentNickname: student.nickname,
@@ -1879,7 +2070,7 @@ function PeopleActivity({ classId, student, responses }: ActivityProps) {
   )
 }
 
-function CentralBankActivity({ classId, student, responses }: ActivityProps) {
+function CentralBankActivity({ classId, student, responses, onSubmitResponse }: ActivityProps) {
   const [scenarioIndex, setScenarioIndex] = useState(0)
   const [diagnosisByScenario, setDiagnosisByScenario] = useState<Record<string, CentralBankDiagnosisChoice>>({})
   const [sideEffectByScenario, setSideEffectByScenario] = useState<Record<string, CentralBankSideEffectChoice>>({})
@@ -1983,7 +2174,7 @@ function CentralBankActivity({ classId, student, responses }: ActivityProps) {
                       triggerConfetti(event.clientX, event.clientY)
                     }
                     setLocalPolicyChoiceByScenario((prev) => ({ ...prev, [scenario.id]: choice }))
-                    void submitResponse({
+                    void onSubmitResponse({
                       classId,
                       studentId: student.id,
                       studentNickname: student.nickname,
@@ -2414,11 +2605,27 @@ function SketchVisual({
 }
 
 function renderScriptLine(line: string): ReactNode {
-  const parts = line.split(/(\*\*[^*]+\*\*)/g)
+  return renderScriptMarkup(line)
+}
+
+function renderScriptMarkup(text: string, keyPrefix = 'script'): ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*|==[^=]+==)/g)
 
   return parts.map((part, index) => {
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={`${part}-${index}`}>{part.slice(2, -2)}</strong>
+      return (
+        <strong key={`${part}-${index}`}>
+          {renderScriptMarkup(part.slice(2, -2), `${keyPrefix}-${index}-strong`)}
+        </strong>
+      )
+    }
+
+    if (part.startsWith('==') && part.endsWith('==')) {
+      return (
+        <span className="lesson-highlight-text" key={`${part}-${index}`}>
+          {renderScriptMarkup(part.slice(2, -2), `${keyPrefix}-${index}-highlight`)}
+        </span>
+      )
     }
 
     return part
