@@ -7,6 +7,7 @@ import {
   getDocs,
   onSnapshot,
   query,
+  runTransaction,
   setDoc,
   updateDoc,
   where,
@@ -15,6 +16,7 @@ import { lessonScenes } from '../data/lessonScenes'
 import type { ClassDoc, LessonPosition, ResponseDoc, SpaceDoc, StudentDoc } from '../types'
 import { db } from './firebase'
 import { makeId } from './ids'
+import { formatStudentCode } from './studentCodes'
 
 type LocalData = {
   spaces: Record<string, SpaceDoc>
@@ -115,6 +117,7 @@ export async function createClass(spaceId: string, name: string): Promise<ClassD
     name,
     sceneIndex: 0,
     beatIndex: 0,
+    nextStudentSequence: 0,
     createdAt: now(),
     updatedAt: now(),
   }
@@ -168,26 +171,63 @@ export async function startClassActivity(classId: string): Promise<void> {
   })
 }
 
-export async function joinClass(classId: string, nickname: string): Promise<StudentDoc> {
+export async function joinClass(classId: string): Promise<StudentDoc> {
   const id = makeId('student')
-  const next: StudentDoc = {
-    id,
-    classId,
-    nickname: nickname.trim() || '익명 학생',
-    currentSceneIndex: 0,
-    currentBeatIndex: 0,
-    lastSeenAt: now(),
-    createdAt: now(),
-  }
 
   if (db) {
-    await setDoc(doc(db, 'classes', classId, 'students', id), next)
-    return next
+    const classRef = doc(db, 'classes', classId)
+    const studentRef = doc(db, 'classes', classId, 'students', id)
+
+    return runTransaction(db, async (transaction) => {
+      const classSnapshot = await transaction.get(classRef)
+      if (!classSnapshot.exists()) {
+        throw new Error('수업을 찾을 수 없습니다.')
+      }
+
+      const classData = classSnapshot.data() as ClassDoc
+      const sequence = classData.nextStudentSequence ?? 0
+      const timestamp = now()
+      const next: StudentDoc = {
+        id,
+        classId,
+        nickname: formatStudentCode(sequence),
+        currentSceneIndex: 0,
+        currentBeatIndex: 0,
+        lastSeenAt: timestamp,
+        createdAt: timestamp,
+      }
+
+      transaction.update(classRef, { nextStudentSequence: sequence + 1, updatedAt: timestamp })
+      transaction.set(studentRef, next)
+      return next
+    })
   }
 
+  let next: StudentDoc | null = null
   mutateLocal((draft) => {
+    const classDoc = draft.classes[classId]
+    if (!classDoc) {
+      return
+    }
+
+    const sequence = classDoc.nextStudentSequence ?? 0
+    const timestamp = now()
+    next = {
+      id,
+      classId,
+      nickname: formatStudentCode(sequence),
+      currentSceneIndex: 0,
+      currentBeatIndex: 0,
+      lastSeenAt: timestamp,
+      createdAt: timestamp,
+    }
+    draft.classes[classId] = { ...classDoc, nextStudentSequence: sequence + 1, updatedAt: timestamp }
     draft.students[id] = next
   })
+
+  if (!next) {
+    throw new Error('수업을 찾을 수 없습니다.')
+  }
 
   return next
 }

@@ -11,6 +11,7 @@ import {
   Plus,
   QrCode,
   School,
+  ShieldCheck,
   Trash2,
   Users,
   Wifi,
@@ -283,6 +284,7 @@ function App() {
         <Route path="/join/:classId" element={<JoinPage />} />
         <Route path="/student/:classId/:studentId" element={<StudentPage />} />
         <Route path="/preview" element={<StudentPreviewPage />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
@@ -348,6 +350,10 @@ function HomePage() {
             <MessageCircle className="size-5" aria-hidden="true" />
             오류 보고 / 피드백 남기기
           </a>
+          <Link to="/privacy" className="home-secondary-action">
+            <ShieldCheck className="size-5" aria-hidden="true" />
+            개인정보 처리방침
+          </Link>
         </div>
       </div>
     </main>
@@ -503,7 +509,7 @@ function TeacherPage() {
 
   function downloadCSV() {
     const headers = [
-      '학생 닉네임',
+      '학생 코드',
       '상태',
       '현재 진도',
       '누적 제출 수',
@@ -1058,16 +1064,7 @@ function JoinPage() {
   const { classId } = useParams()
   const classDoc = useClassDoc(classId)
   const navigate = useNavigate()
-  const [nickname, setNickname] = useState('')
-  const [savedJoin, setSavedJoin] = useState<SavedStudentJoin | null>(null)
-
-  useEffect(() => {
-    const nextSavedJoin = getSavedStudentJoin(classId)
-    setSavedJoin(nextSavedJoin)
-    if (nextSavedJoin) {
-      setNickname(nextSavedJoin.nickname)
-    }
-  }, [classId])
+  const savedJoin = useMemo(() => getSavedStudentJoin(classId), [classId])
 
   async function handleJoin(event: FormEvent) {
     event.preventDefault()
@@ -1075,12 +1072,12 @@ function JoinPage() {
       return
     }
 
-    if (savedJoin && nickname.trim() === savedJoin.nickname) {
+    if (savedJoin) {
       navigate(`/student/${classId}/${savedJoin.studentId}`)
       return
     }
 
-    const student = await joinClass(classId, nickname)
+    const student = await joinClass(classId)
     saveStudentJoin({ classId, studentId: student.id, nickname: student.nickname })
     navigate(`/student/${classId}/${student.id}`)
   }
@@ -1100,11 +1097,13 @@ function JoinPage() {
           <p className="hand-tag w-fit">학생 입장</p>
           <div>
             <h1 className="font-display text-3xl font-black">{classDoc?.name ?? '수업'}에 들어가기</h1>
-            <p className="mt-2 text-ink-soft">닉네임은 중복 가능해요. 선생님은 닉네임별 진행률과 응답을 볼 수 있습니다.</p>
+            <p className="mt-2 text-ink-soft">
+              이름은 입력하지 않습니다. 입장 순서에 따라 학생-a, 학생-b처럼 익명 코드가 자동으로 발급됩니다.
+            </p>
           </div>
           {savedJoin ? (
             <div className="rounded-xl border-2 border-ink bg-blue-soft p-3">
-              <p className="font-bold text-ink-soft">이 기기에 저장된 닉네임</p>
+              <p className="font-bold text-ink-soft">이 기기에 저장된 학생 코드</p>
               <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <strong className="text-xl">{savedJoin.nickname}</strong>
                 <HandButton type="button" variant="quiet" onClick={handleSavedJoin}>
@@ -1114,13 +1113,120 @@ function JoinPage() {
               </div>
             </div>
           ) : null}
-          <TextField label="닉네임" value={nickname} onChange={setNickname} />
           <HandButton type="submit" className="w-full justify-center">
             <DoorOpen className="size-5" />
-            수업 참여
+            {savedJoin ? '이 코드로 다시 입장' : '익명 코드 받아 입장'}
           </HandButton>
+          <p className="join-privacy-note">
+            입장 전에 <Link to="/privacy">개인정보 처리방침</Link>을 확인해주세요.
+          </p>
         </form>
       </div>
+    </main>
+  )
+}
+
+function PrivacyPolicyPage() {
+  return (
+    <main className="privacy-page min-h-screen bg-paper px-4 py-8 text-ink">
+      <article className="privacy-document mx-auto">
+        <Link to="/" className="privacy-back-link">
+          <ArrowLeft className="size-5" />
+          인플레이션 수업으로 돌아가기
+        </Link>
+
+        <header className="privacy-header">
+          <ShieldCheck className="size-10" aria-hidden="true" />
+          <div>
+            <p className="hand-tag w-fit">개인정보 보호</p>
+            <h1>개인정보 처리방침</h1>
+            <p>시행일: 2026년 6월 12일</p>
+          </div>
+        </header>
+
+        <section>
+          <h2>1. 기본 원칙</h2>
+          <p>
+            인플레이션 수업은 학생의 실명, 전화번호, 이메일 주소를 직접 입력받지 않습니다. 학생에게는 입장
+            순서에 따른 익명 코드(예: 학생-a)가 자동으로 부여됩니다. 다만 수업 운영과 학습 진행을 위해 아래
+            정보가 처리될 수 있습니다.
+          </p>
+        </section>
+
+        <section>
+          <h2>2. 처리하는 정보와 목적</h2>
+          <div className="privacy-table-wrap">
+            <table>
+              <thead>
+                <tr><th>구분</th><th>처리 항목</th><th>목적</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>수업 정보</td><td>지역, 학교, 학년, 반 이름</td><td>교사용 수업 공간 구성</td></tr>
+                <tr><td>학생 정보</td><td>무작위 학생 ID, 익명 학생 코드, 입장·최근 활동 시각</td><td>학생 구분과 재입장</td></tr>
+                <tr><td>학습 기록</td><td>현재 진행 위치, 선택·서술 응답, 정오 여부, 제출 시각</td><td>수업 진행, 결과 확인과 통계</td></tr>
+                <tr><td>기기 저장</td><td>반 ID, 학생 ID, 익명 학생 코드</td><td>같은 기기에서 수업 재입장</td></tr>
+                <tr><td>자동 생성 정보</td><td>IP 주소, 브라우저·기기 정보, 접속 기록이 인프라에서 생성될 수 있음</td><td>서비스 제공, 보안과 장애 대응</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2>3. 보유 기간과 파기</h2>
+          <p>
+            수업 정보와 학습 기록은 교사가 해당 반을 삭제할 때까지 보관되며, 삭제 시 학생 정보와 응답도 함께
+            삭제됩니다. 기기에 저장된 재입장 정보는 브라우저 저장소를 삭제하면 제거됩니다. 관계 법령에 따라
+            보존할 의무가 있는 경우에는 해당 기간 동안 별도로 보관한 뒤 파기합니다.
+          </p>
+        </section>
+
+        <section>
+          <h2>4. 외부 서비스 이용</h2>
+          <p>
+            서비스 운영을 위해 Google Firebase(Cloud Firestore)를 데이터 저장·동기화에, Vercel을 웹 호스팅과
+            전송에 사용합니다. 이 과정에서 데이터가 해당 사업자의 국내외 인프라에서 처리될 수 있습니다.
+            각 사업자의 처리 기준은 아래 문서에서 확인할 수 있습니다.
+          </p>
+          <ul>
+            <li><a href="https://firebase.google.com/support/privacy" target="_blank" rel="noreferrer">Firebase 개인정보 보호 및 보안</a></li>
+            <li><a href="https://vercel.com/legal/privacy-notice" target="_blank" rel="noreferrer">Vercel Privacy Notice</a></li>
+          </ul>
+          <p>학습 기록을 광고 목적으로 판매하거나 별도의 광고 사업자에게 제공하지 않습니다.</p>
+        </section>
+
+        <section>
+          <h2>5. 정보주체의 권리</h2>
+          <p>
+            학생 또는 보호자는 교사를 통해 자신의 익명 코드에 연결된 기록의 확인·정정·삭제를 요청할 수
+            있습니다. 교사는 대시보드에서 개별 학생을 퇴장 처리하거나 반 전체를 삭제할 수 있습니다.
+          </p>
+        </section>
+
+        <section>
+          <h2>6. 안전성 확보 조치</h2>
+          <p>
+            실명 입력을 받지 않는 개인정보 최소화, 학생별 무작위 ID 사용, HTTPS 암호화 통신, 접근 가능한
+            운영 계정의 제한 등 필요한 보호 조치를 적용합니다.
+          </p>
+        </section>
+
+        <section>
+          <h2>7. 문의 및 권익침해 구제</h2>
+          <p>개인정보 관련 문의와 삭제 요청은 아래 서비스 문의 창구로 접수할 수 있습니다.</p>
+          <a className="privacy-contact" href="https://blog.naver.com/yadoransw/224307366490">
+            오류 보고 / 피드백 남기기
+          </a>
+          <p>
+            개인정보 침해에 관한 상담이 필요한 경우 개인정보침해 신고센터(국번 없이 118) 또는 개인정보분쟁조정위원회를
+            이용할 수 있습니다.
+          </p>
+        </section>
+
+        <section>
+          <h2>8. 방침 변경</h2>
+          <p>내용이 변경되면 이 페이지에서 시행일과 변경 사항을 공개합니다.</p>
+        </section>
+      </article>
     </main>
   )
 }

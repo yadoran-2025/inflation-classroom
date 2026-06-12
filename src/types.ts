@@ -91,6 +91,7 @@ export type ClassDoc = LessonPosition & {
   createdAt: number
   updatedAt: number
   startedAt?: number
+  nextStudentSequence?: number
 }
 
 export type StudentDoc = {
