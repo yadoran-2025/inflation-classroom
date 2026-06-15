@@ -35,5 +35,11 @@ VITE_FIREBASE_APP_ID=
 - `/`: 교사용 학교/학년 입장
 - `/space/:spaceId`: 반 목록 및 반 생성
 - `/teacher/:classId`: 교사용 수업 진행판
-- `/join/:classId`: 학생 닉네임 입장
+- `/join/:classId`: 익명 학생 코드 발급·재입장
 - `/student/:classId/:studentId`: 학생 수업 화면
+- `/privacy`: 개인정보 처리방침
+
+## 릴리스 정보
+
+릴리스 정보는 `src/data/releases.json`에서 관리합니다. 최신 항목의 버전은 `package.json` 버전과 같아야 하며,
+`npm run build`에서 자동 검증됩니다.

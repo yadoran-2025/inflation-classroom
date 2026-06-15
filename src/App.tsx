@@ -37,6 +37,7 @@ import {
   peopleOptions,
 } from './data/lesson'
 import { lessonScenes } from './data/lessonScenes'
+import releaseNotesData from './data/releases.json'
 import { firstResponsesByStudentAndItem, summarizeActivity } from './lib/analytics'
 import { buildSpaceId } from './lib/ids'
 import {
@@ -54,6 +55,7 @@ import {
   getJoinUrl,
   joinClass,
   markStudentPosition,
+  migrateClassStudentIdentifiers,
   startClassActivity,
   submitResponse,
   upsertSpace,
@@ -61,11 +63,16 @@ import {
   useClasses,
   useResponses,
   useSpace,
-  useStudent,
+  useStudentRecord,
   useStudentResponses,
   useStudents,
   deleteStudent,
 } from './lib/store'
+import {
+  clearSavedStudentJoin,
+  getSavedStudentJoin,
+  saveStudentJoin,
+} from './lib/studentSession'
 import type {
   ActivityKind,
   ChoiceActivityKind,
@@ -78,7 +85,6 @@ import type {
 } from './types'
 
 const SIMULATOR_BODY_MARKER = '[[simulator]]'
-const studentJoinStorageKey = 'inflation-classroom-student-joins'
 const waitingVideoUrl = 'https://youtu.be/cZwW5bJ5Iqw?si=iSA_9Lg2lyJvf--B'
 const waitingVideoThumbnailUrl = 'https://img.youtube.com/vi/cZwW5bJ5Iqw/hqdefault.jpg'
 const waitingVideoQuestions = [
@@ -87,11 +93,16 @@ const waitingVideoQuestions = [
   '금리를 인상/ 인하한다는 것의 진정한 의미는 무엇일까요?',
 ]
 
-type SavedStudentJoin = {
-  classId: string
-  studentId: string
-  nickname: string
+type ReleaseNote = {
+  version: string
+  date: string
+  title: string
+  changes: string[]
 }
+
+const releaseNotes = releaseNotesData as ReleaseNote[]
+const latestRelease = releaseNotes[0]
+const appVersion = latestRelease.version
 
 type ResponseInput = Omit<ResponseDoc, 'id' | 'createdAt'>
 type SubmitResponseHandler = (response: ResponseInput, previousResponse?: ResponseDoc) => void | Promise<void>
@@ -202,55 +213,6 @@ function isBeatWorkComplete(
   return { complete: true, message: null }
 }
 
-function readSavedStudentJoins(): Record<string, SavedStudentJoin> {
-  if (typeof localStorage === 'undefined') {
-    return {}
-  }
-
-  const raw = localStorage.getItem(studentJoinStorageKey)
-  if (!raw) {
-    return {}
-  }
-
-  try {
-    return JSON.parse(raw) as Record<string, SavedStudentJoin>
-  } catch {
-    return {}
-  }
-}
-
-function getSavedStudentJoin(classId: string | undefined): SavedStudentJoin | null {
-  if (!classId) {
-    return null
-  }
-
-  return readSavedStudentJoins()[classId] ?? null
-}
-
-function saveStudentJoin(join: SavedStudentJoin): void {
-  if (typeof localStorage === 'undefined') {
-    return
-  }
-
-  localStorage.setItem(
-    studentJoinStorageKey,
-    JSON.stringify({
-      ...readSavedStudentJoins(),
-      [join.classId]: join,
-    }),
-  )
-}
-
-function clearSavedStudentJoin(classId: string): void {
-  if (typeof localStorage === 'undefined') {
-    return
-  }
-
-  const joins = readSavedStudentJoins()
-  delete joins[classId]
-  localStorage.setItem(studentJoinStorageKey, JSON.stringify(joins))
-}
-
 async function copyTextToClipboard(text: string): Promise<void> {
   if (navigator.clipboard?.writeText) {
     try {
@@ -309,7 +271,7 @@ function HomePage() {
       <div className="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-5xl flex-col justify-center gap-8">
         <section className="grid items-center gap-8 md:grid-cols-[1.05fr_0.95fr]">
           <div className="space-y-6">
-            <p className="hand-tag w-fit">인터랙티브 경제 수업</p>
+            <p className="hand-tag w-fit">인터랙티브 경제 수업 · v{appVersion}</p>
             <div>
               <h1 className="font-display text-4xl font-black leading-tight sm:text-5xl">
                 화폐가치,
@@ -334,8 +296,9 @@ function HomePage() {
             <TextField label="학년명" value={grade} onChange={setGrade} />
             <HandButton type="submit" className="w-full justify-center">
               <DoorOpen className="size-5" />
-              공간 만들기 / 입장
+              학교와 학년 만들기/입장
             </HandButton>
+            <p className="teacher-entry-help">반은 학교와 학년 공간에 들어간 뒤 여러 개 만들 수 있습니다.</p>
           </form>
         </section>
         <div className="home-secondary-actions">
@@ -385,6 +348,12 @@ function SpacePage() {
     <PageFrame>
       <TopBar title={space ? `${space.region} / ${space.school} / ${space.grade}` : '학교 공간'} />
       <section className="space-board">
+        <div className="lobby-quick-actions" aria-label="교사 로비 바로가기">
+          <Link to="/preview"><Eye className="size-5" />학생 화면 미리보기</Link>
+          <a href="https://blog.naver.com/yadoransw/224307366490"><MessageCircle className="size-5" />피드백</a>
+          <Link to="/privacy"><ShieldCheck className="size-5" />개인정보 처리방침</Link>
+          <Link to="/"><DoorOpen className="size-5" />학교와 학년 나가기</Link>
+        </div>
         <div className="space-board-header">
           <div>
             <p className="hand-tag w-fit">내 반</p>
@@ -392,6 +361,8 @@ function SpacePage() {
           </div>
           <span className="space-class-count">총 {classes.length}개 반</span>
         </div>
+
+        <ReleaseNotesPanel />
 
         <form onSubmit={handleCreateClass} className="class-create-form">
           <div className="class-create-input-wrap">
@@ -403,7 +374,7 @@ function SpacePage() {
               onChange={(event) => setClassName(event.target.value)}
             />
           </div>
-          <HandButton type="submit">
+          <HandButton type="submit" disabled={!className.trim()}>
             <Plus className="size-5" />새 반 추가
           </HandButton>
         </form>
@@ -450,9 +421,12 @@ function ClassCard({ classDoc, onEnter }: { classDoc: ClassDoc; onEnter: () => v
       <div className="class-card-main">
         <div className="class-card-title-row">
           <h2>{classDoc.name}</h2>
-          <span className={`class-status ${classDoc.startedAt ? 'is-live' : ''}`}>
-            {classDoc.startedAt ? '진행 중' : '준비 중'}
-          </span>
+          <div className="class-card-badges">
+            <span className="class-version">v{appVersion}</span>
+            <span className={`class-status ${classDoc.startedAt ? 'is-live' : ''}`}>
+              {classDoc.startedAt ? '진행 중' : '준비 중'}
+            </span>
+          </div>
         </div>
         <div className="class-card-meta">
           <span>{formatProgressLabel(classDoc.sceneIndex, classDoc.beatIndex)}</span>
@@ -469,12 +443,44 @@ function ClassCard({ classDoc, onEnter }: { classDoc: ClassDoc; onEnter: () => v
           {copied ? '복사 완료' : '링크 복사'}
         </HandButton>
         <QrCodeTextButton value={joinUrl} title={`${classDoc.name} 학생 입장 QR`} />
+        <Link to="/preview" className="class-card-preview-link">
+          <Eye className="size-4" />학생화면 미리보기
+        </Link>
         <HandButton className="class-card-action danger" variant="quiet" onClick={() => void handleDeleteClass()}>
           <Trash2 className="size-4" />
           삭제
         </HandButton>
       </div>
     </article>
+  )
+}
+
+function ReleaseNotesPanel() {
+  return (
+    <section className="release-panel" aria-labelledby="release-title">
+      <div className="release-panel-heading">
+        <div>
+          <p className="release-eyebrow">최신 업데이트 · {latestRelease.date}</p>
+          <h2 id="release-title">v{latestRelease.version} {latestRelease.title}</h2>
+        </div>
+        <span className="release-badge">운영 안내</span>
+      </div>
+      <ul>
+        {latestRelease.changes.map((change) => <li key={change}>{change}</li>)}
+      </ul>
+      {releaseNotes.length > 1 ? (
+        <details className="release-history">
+          <summary>이전 업데이트 보기</summary>
+          {releaseNotes.slice(1).map((release) => (
+            <article key={release.version}>
+              <strong>v{release.version} · {release.title}</strong>
+              <span>{release.date}</span>
+              <ul>{release.changes.map((change) => <li key={change}>{change}</li>)}</ul>
+            </article>
+          ))}
+        </details>
+      ) : null}
+    </section>
   )
 }
 
@@ -487,6 +493,12 @@ function TeacherPage() {
   const now = useNowTick()
   const activeStudents = students.filter((student) => now - student.lastSeenAt < 1000 * 60 * 5).length
   const responseCount = responses.length
+
+  useEffect(() => {
+    if (classId) {
+      void migrateClassStudentIdentifiers(classId)
+    }
+  }, [classId])
 
   // State
   const [selectedStudent, setSelectedStudent] = useState<StudentDoc | null>(null)
@@ -1022,7 +1034,7 @@ function QrCodeTextButton({ value, title }: { value: string; title: string }) {
     <>
       <HandButton className="class-card-action" variant="quiet" onClick={() => setIsOpen(true)}>
         <QrCode className="size-4" />
-        QR
+        학생 입장 QR
       </HandButton>
       {isOpen ? <QrFullscreenModal value={value} title={title} onClose={() => setIsOpen(false)} /> : null}
     </>
@@ -1078,7 +1090,7 @@ function JoinPage() {
     }
 
     const student = await joinClass(classId)
-    saveStudentJoin({ classId, studentId: student.id, nickname: student.nickname })
+    saveStudentJoin({ classId, studentId: student.id, studentCode: student.nickname })
     navigate(`/student/${classId}/${student.id}`)
   }
 
@@ -1105,7 +1117,7 @@ function JoinPage() {
             <div className="rounded-xl border-2 border-ink bg-blue-soft p-3">
               <p className="font-bold text-ink-soft">이 기기에 저장된 학생 코드</p>
               <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <strong className="text-xl">{savedJoin.nickname}</strong>
+                <strong className="text-xl">{savedJoin.studentCode ?? '저장된 익명 학생'}</strong>
                 <HandButton type="button" variant="quiet" onClick={handleSavedJoin}>
                   <DoorOpen className="size-5" />
                   다시 입장
@@ -1140,7 +1152,7 @@ function PrivacyPolicyPage() {
           <div>
             <p className="hand-tag w-fit">개인정보 보호</p>
             <h1>개인정보 처리방침</h1>
-            <p>시행일: 2026년 6월 12일</p>
+            <p>시행일: 2026년 6월 13일 · 앱 v{appVersion}</p>
           </div>
         </header>
 
@@ -1149,7 +1161,8 @@ function PrivacyPolicyPage() {
           <p>
             인플레이션 수업은 학생의 실명, 전화번호, 이메일 주소를 직접 입력받지 않습니다. 학생에게는 입장
             순서에 따른 익명 코드(예: 학생-a)가 자동으로 부여됩니다. 다만 수업 운영과 학습 진행을 위해 아래
-            정보가 처리될 수 있습니다.
+            정보가 처리될 수 있습니다. 익명 코드도 수업 기록이나 기기 정보와 결합되면 개인을 구분할 수 있으므로
+            보호가 필요한 정보로 취급합니다.
           </p>
         </section>
 
@@ -1233,12 +1246,13 @@ function PrivacyPolicyPage() {
 
 function StudentPage() {
   const { classId, studentId } = useParams()
+  const navigate = useNavigate()
   const classDoc = useClassDoc(classId)
-  const student = useStudent(classId, studentId)
+  const { student, isLoading: isStudentLoading } = useStudentRecord(classId, studentId)
   const studentResponses = useStudentResponses(classId, studentId)
   useEffect(() => {
     if (classId && student) {
-      saveStudentJoin({ classId, studentId: student.id, nickname: student.nickname })
+      saveStudentJoin({ classId, studentId: student.id, studentCode: student.nickname })
     }
   }, [classId, student])
 
@@ -1246,11 +1260,36 @@ function StudentPage() {
     return <Navigate to="/" replace />
   }
 
-  if (!classDoc || !student) {
+  if (!classDoc || isStudentLoading) {
     return (
       <main className="min-h-screen bg-paper px-4 py-6 text-ink">
         <div className="mx-auto max-w-md">
           <div className="hand-panel p-6">수업 정보를 불러오는 중입니다.</div>
+        </div>
+      </main>
+    )
+  }
+
+  if (!student) {
+    return (
+      <main className="min-h-screen bg-paper px-4 py-6 text-ink">
+        <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-md items-center">
+          <section className="hand-panel w-full space-y-4 p-6 text-center">
+            <p className="hand-tag mx-auto w-fit">재입장 필요</p>
+            <h1 className="font-display text-3xl font-black">이 학생 코드는 더 이상 사용할 수 없어요</h1>
+            <p className="font-bold text-ink-soft">
+              선생님이 학생 기록을 삭제했거나 반 정보가 바뀌었습니다. 새 익명 코드를 받아 다시 입장해주세요.
+            </p>
+            <HandButton
+              className="w-full justify-center"
+              onClick={() => {
+                clearSavedStudentJoin(classId)
+                navigate(`/join/${classId}`, { replace: true })
+              }}
+            >
+              <DoorOpen className="size-5" />새 익명 코드 받기
+            </HandButton>
+          </section>
         </div>
       </main>
     )
@@ -1267,9 +1306,11 @@ function StudentPage() {
               선생님이 교사 대시보드에서 활동 시작 버튼을 누르면 자동으로 수업 화면이 열립니다.
             </p>
             <StudentWaitingVideoCard />
-            <p className="rounded-xl border-2 border-ink bg-blue-soft p-3 font-bold">
-              {student.nickname} 님, 잠시만 기다려주세요.
-            </p>
+            <div className="student-code-card">
+              <span>내 학생 코드</span>
+              <strong>{student.nickname}</strong>
+              <p>이름 대신 이 코드로 진행 상황과 응답이 저장됩니다.</p>
+            </div>
           </section>
         </div>
       </main>
@@ -1280,8 +1321,10 @@ function StudentPage() {
     <ConfettiProvider>
       <main className="min-h-screen bg-paper pb-20 text-ink">
         <div className="student-shell mx-auto flex min-h-screen w-full flex-col px-4 py-5">
-          <div className="mb-3 flex items-center justify-end gap-3 text-sm text-ink-soft">
-            <span>{student.nickname}</span>
+          <div className="student-identity-bar">
+            <span>내 학생 코드</span>
+            <strong>{student.nickname}</strong>
+            <small>v{appVersion}</small>
           </div>
           <StudentLessonSession
             key={student.id}
@@ -2021,11 +2064,8 @@ function ShortAnswerPanel({
 }: ActivityProps & { sceneId: string; response: NonNullable<LessonBeat['response']> }) {
   const latest = useLatestResponseMap(responses, 'short-answer')
   const answer = latest.get(response.id)
-  const [value, setValue] = useState(answer?.choice ?? '')
-
-  useEffect(() => {
-    setValue(answer?.choice ?? '')
-  }, [answer?.choice])
+  const [drafts, setDrafts] = useState<Record<string, string>>({})
+  const value = drafts[response.id] ?? answer?.choice ?? ''
 
   const trimmed = value.trim()
 
@@ -2056,8 +2096,9 @@ function ShortAnswerPanel({
         value={value}
         placeholder={response.placeholder}
         rows={3}
-        onChange={(event) => setValue(event.target.value)}
+        onChange={(event) => setDrafts((current) => ({ ...current, [response.id]: event.target.value }))}
       />
+      <p className="short-answer-privacy">이름, 전화번호, 주소 등 개인정보는 답변에 적지 마세요.</p>
       <div className="short-answer-actions">
         <span>{answer ? '제출한 답을 다시 고칠 수 있습니다.' : '생각을 한 문장으로 정리해봅시다.'}</span>
         <HandButton type="submit" disabled={!trimmed}>
@@ -2184,15 +2225,6 @@ function CentralBankActivity({ classId, student, responses, onSubmitResponse }: 
   const sideEffectChoice = sideEffectByScenario[scenario.id]
   const gauge = getScenarioGauge(scenario, policyChoice)
   const recommendedPolicy = scenario.policy.recommended
-
-  // Sync database answer when it changes, but keep local speediness
-  useEffect(() => {
-    const answerVal = latest.get(scenario.id)
-    if (answerVal) {
-      const choice = getPolicyChoice(answerVal.choice)
-      setLocalPolicyChoiceByScenario((prev) => ({ ...prev, [scenario.id]: choice }))
-    }
-  }, [scenario.id, latest])
 
   function setDiagnosis(choice: CentralBankDiagnosisChoice) {
     setDiagnosisByScenario((previous) => ({ ...previous, [scenario.id]: choice }))
@@ -2537,14 +2569,6 @@ function choiceLabel(response: ResponseDoc, options: { truncateShortAnswer?: boo
   )
   return labels.get(response.choice) ?? response.choice
 }
-
-export function isChoiceActivity(activity: ActivityKind | undefined | null): activity is ChoiceActivityKind {
-  return Boolean(activity && activity !== 'short-answer')
-}
-
-
-
-
 
 function responseItemTitle(response: ResponseDoc): string | null {
   if (response.activity === 'news') {
@@ -3205,7 +3229,7 @@ function MiniGauge({
     }
   }, [value])
 
-  const delta = value - prevValueRef.current
+  const delta = value - displayValue
   const isUp = delta > 0.5
   const isDown = delta < -0.5
 
@@ -3244,7 +3268,7 @@ function MiniGauge({
             stroke={needleColor}
             strokeWidth="4.5"
             strokeLinecap="round"
-            initial={{ rotate: -55 + prevValueRef.current * 1.1 }}
+            initial={false}
             animate={{ rotate: rotation }}
             transition={{ type: 'spring', stiffness: 55, damping: 12 }}
             style={{ transformOrigin: '60px 63px' }}
@@ -3406,6 +3430,7 @@ function TopBar({ title }: { title: string }) {
       <Link to="/" className="inline-flex items-center gap-2 font-bold">
         <Home className="size-5" />
         인플레이션 수업
+        <small className="app-version">v{appVersion}</small>
       </Link>
       <span className="truncate text-right text-sm text-ink-soft">{title}</span>
     </nav>

@@ -26,6 +26,8 @@ type ConfettiContextType = {
 
 const ConfettiContext = createContext<ConfettiContextType | undefined>(undefined)
 
+// The hook and provider intentionally share this module and context instance.
+// eslint-disable-next-line react-refresh/only-export-components
 export function useConfetti() {
   const context = useContext(ConfettiContext)
   if (!context) {
@@ -118,13 +120,11 @@ export function ConfettiProvider({ children }: { children: ReactNode }) {
             const outerRadius = p.size
             const innerRadius = p.size * 0.45
             let rot = (Math.PI / 2) * 3
-            let sx = 0
-            let sy = 0
             const step = Math.PI / spikes
 
             for (let i = 0; i < spikes; i++) {
-              sx = Math.cos(rot) * outerRadius
-              sy = Math.sin(rot) * outerRadius
+              let sx = Math.cos(rot) * outerRadius
+              let sy = Math.sin(rot) * outerRadius
               ctx.lineTo(sx, sy)
               rot += step
 

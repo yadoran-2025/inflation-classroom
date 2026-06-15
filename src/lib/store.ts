@@ -11,12 +11,13 @@ import {
   setDoc,
   updateDoc,
   where,
+  writeBatch,
 } from 'firebase/firestore'
 import { lessonScenes } from '../data/lessonScenes'
 import type { ClassDoc, LessonPosition, ResponseDoc, SpaceDoc, StudentDoc } from '../types'
 import { db } from './firebase'
 import { makeId } from './ids'
-import { formatStudentCode } from './studentCodes'
+import { assignStudentCodes, formatStudentCode } from './studentCodes'
 
 type LocalData = {
   spaces: Record<string, SpaceDoc>
@@ -42,6 +43,44 @@ function emptyStore(): LocalData {
   return { spaces: {}, classes: {}, students: {}, responses: {} }
 }
 
+function migrateLocalStudentIdentifiers(data: LocalData): boolean {
+  let changed = false
+  const studentsByClass = Object.values(data.students).reduce<Record<string, StudentDoc[]>>((groups, student) => {
+    groups[student.classId] = [...(groups[student.classId] ?? []), student]
+    return groups
+  }, {})
+
+  for (const [classId, students] of Object.entries(studentsByClass)) {
+    const { codesByStudentId, nextSequence } = assignStudentCodes(students)
+    for (const student of students) {
+      const studentCode = codesByStudentId.get(student.id)
+      if (studentCode && student.nickname !== studentCode) {
+        data.students[student.id] = { ...student, nickname: studentCode }
+        changed = true
+      }
+    }
+
+    for (const [responseId, response] of Object.entries(data.responses)) {
+      if (response.classId !== classId) {
+        continue
+      }
+      const studentCode = codesByStudentId.get(response.studentId)
+      if (studentCode && response.studentNickname !== studentCode) {
+        data.responses[responseId] = { ...response, studentNickname: studentCode }
+        changed = true
+      }
+    }
+
+    const classDoc = data.classes[classId]
+    if (classDoc && (classDoc.nextStudentSequence ?? 0) < nextSequence) {
+      data.classes[classId] = { ...classDoc, nextStudentSequence: nextSequence }
+      changed = true
+    }
+  }
+
+  return changed
+}
+
 function readLocal(): LocalData {
   if (typeof localStorage === 'undefined') {
     return emptyStore()
@@ -53,9 +92,65 @@ function readLocal(): LocalData {
   }
 
   try {
-    return { ...emptyStore(), ...JSON.parse(raw) } as LocalData
+    const data = { ...emptyStore(), ...JSON.parse(raw) } as LocalData
+    if (migrateLocalStudentIdentifiers(data)) {
+      localStorage.setItem(localKey, JSON.stringify(data))
+    }
+    return data
   } catch {
     return emptyStore()
+  }
+}
+
+export async function migrateClassStudentIdentifiers(classId: string): Promise<void> {
+  if (!db) {
+    const data = readLocal()
+    if (migrateLocalStudentIdentifiers(data)) {
+      writeLocal(data)
+    }
+    return
+  }
+
+  const studentsSnapshot = await getDocs(collection(db, 'classes', classId, 'students'))
+  const students = studentsSnapshot.docs.map((studentDoc) => ({
+    id: studentDoc.id,
+    ...studentDoc.data(),
+  }) as StudentDoc)
+  const { codesByStudentId, nextSequence } = assignStudentCodes(students)
+
+  await runTransaction(db, async (transaction) => {
+    const classRef = doc(db!, 'classes', classId)
+    const classSnapshot = await transaction.get(classRef)
+    if (classSnapshot.exists()) {
+      const current = (classSnapshot.data() as ClassDoc).nextStudentSequence ?? 0
+      if (current < nextSequence) {
+        transaction.update(classRef, { nextStudentSequence: nextSequence, updatedAt: now() })
+      }
+    }
+  })
+
+  const responsesSnapshot = await getDocs(collection(db, 'classes', classId, 'responses'))
+  const updates: Array<(batch: ReturnType<typeof writeBatch>) => void> = []
+
+  for (const studentDoc of studentsSnapshot.docs) {
+    const studentCode = codesByStudentId.get(studentDoc.id)
+    if (studentCode && studentDoc.data().nickname !== studentCode) {
+      updates.push((batch) => batch.update(studentDoc.ref, { nickname: studentCode }))
+    }
+  }
+
+  for (const responseDoc of responsesSnapshot.docs) {
+    const response = responseDoc.data() as ResponseDoc
+    const studentCode = codesByStudentId.get(response.studentId)
+    if (studentCode && response.studentNickname !== studentCode) {
+      updates.push((batch) => batch.update(responseDoc.ref, { studentNickname: studentCode }))
+    }
+  }
+
+  for (let index = 0; index < updates.length; index += 450) {
+    const batch = writeBatch(db)
+    updates.slice(index, index + 450).forEach((applyUpdate) => applyUpdate(batch))
+    await batch.commit()
   }
 }
 
@@ -443,6 +538,47 @@ export function useStudent(classId: string | undefined, studentId: string | unde
   }, [classId, studentId])
 
   return db ? remoteStudent : localStudent
+}
+
+export function useStudentRecord(
+  classId: string | undefined,
+  studentId: string | undefined,
+): { student: StudentDoc | null; isLoading: boolean } {
+  const recordKey = classId && studentId ? `${classId}/${studentId}` : ''
+  const localStudent = useLocalSelector(
+    (data) => (classId && studentId ? data.students[studentId] ?? null : null),
+  )
+  const [remoteState, setRemoteState] = useState<{
+    key: string
+    student: StudentDoc | null
+    isLoading: boolean
+  }>({
+    key: recordKey,
+    student: null,
+    isLoading: Boolean(db && classId && studentId),
+  })
+
+  useEffect(() => {
+    if (!db || !classId || !studentId) {
+      return undefined
+    }
+
+    return onSnapshot(doc(db, 'classes', classId, 'students', studentId), (snapshot) => {
+      setRemoteState({
+        key: `${classId}/${studentId}`,
+        student: snapshot.exists() ? ({ id: snapshot.id, ...snapshot.data() } as StudentDoc) : null,
+        isLoading: false,
+      })
+    })
+  }, [classId, studentId])
+
+  if (!db) {
+    return { student: localStudent, isLoading: false }
+  }
+
+  return remoteState.key === recordKey
+    ? remoteState
+    : { student: null, isLoading: true }
 }
 
 export function useResponses(classId: string | undefined, enabled = true): ResponseDoc[] {
